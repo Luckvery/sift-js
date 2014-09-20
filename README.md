@@ -1,5 +1,6 @@
 
-![](https://github.com/Luckvery/sift-js/raw/master/img/siftbro.png)
+![](https://github.com/Luckvery/sift-js/blob/master/img/siftbro.jpg)
+
 
 # Sift 
 *Validations on steriods*
