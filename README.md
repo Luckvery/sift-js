@@ -3,10 +3,10 @@
 
 
 # Sift 
-*Validations on steriods*
-> Run your parameters through the Sift to define rules upfront, simplifying your implementation.
+*Validations and typing on steriods*
+> Run your parameters through the Sift to define rules upfront, simplifying your js implementation.
 
-I used this a lot with grunt. I plan on using it in a few other js projects too.  I'd love to hear any feed back on improvements and ways you've used it!
+I use this a lot with grunt. I plan on using it in a few other js projects too.  I'd love to hear any feed back on improvements and ways you've used it!
 
 
 ### The Sift Config Object 
@@ -41,18 +41,18 @@ Type: `Object`
 
 Declaratively perform validation on parameters in Sift's contract
 
-|    Name             |   type  | Description                                             |
-|:-------------------:|---------|--------------------------------------------------------:|
-|atLeastOne|Boolean|At least one argument in contract must have a value|
-|custom|Function|Define custom validations with a callback function|
-|defaults|Object map|Set default values for arguments in this group that aren't present|
-|exclusive|Array of Arrays|Each argument in this group is mutually exclusive|
-|map|Boolean|transform user input into some other value you may find more useful|
-|only|Boolean|List the only allowable values for an argument|
-|oneForAll|Array|If one argument exists, then all arguments in this group must be present|
-|required|Array|An array of required arguments|
-|requires|Object|Define dependants of an argument|
-|type|Object|lodash based type checking| 
+|    Name             | Description                                              |
+|:-------------------:|:--------------------------------------------------------:|
+|atLeastOne|At least one argument in contract must have a value|
+|custom|Define custom validations with a callback function|
+|defaults|Set default values for arguments in this group that aren't present|
+|exclusive|Each argument in this group is mutually exclusive|
+|map|transform user input into some other value you may find more useful|
+|only|List the only allowable values for an argument|
+|oneForAll|If one argument exists, then all arguments in this group must be present|
+|required|An array of required arguments|
+|requires|Define dependants of an argument|
+|type|lodash based type checking| 
 
 ### Example usage
 
