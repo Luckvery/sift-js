@@ -96,7 +96,7 @@ module.exports = function(grunt) {
 ```
 fooBar(){
      var inputObj = Sift({
-        contract:["url", "named", "butler", "reconcile", "shell", "config", "year"],
+        contract:["url", "named", "clientId", "reconcile", "shell", "config", "year"],
         args: this.args,
         failOnError: true,
         rules:{
@@ -104,7 +104,7 @@ fooBar(){
                     ["url", "named"]
                 ],
                 requires: {
-                    "reconcile": ["butler"]
+                    "reconcile": ["clientId"]
                 },
                 only: {
                     "shell": ["Terminal", "iTerm"],
@@ -113,7 +113,7 @@ fooBar(){
                 defaults: {
                     "shell": "Terminal"
                 },
-                oneForAll: ["module", "butler"],
+                oneForAll: ["module", "clientId"],
                 atleastOne: true,
                 required: ["name"],
                 map: {
@@ -125,7 +125,7 @@ fooBar(){
                type:{
                    "url":["String"],
                    "year":["number"],
-                   "butler":["String", "regex"]
+                   "clientId":["String", "regex"]
                },
                custom:{
                    "shell":function(value){
