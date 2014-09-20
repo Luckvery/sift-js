@@ -71,8 +71,15 @@ module.exports = function(grunt) {
                 },
                 map:{
                     "update"{
-                        "s3Assets": ['shell:buildS3AssetsLocally', 'shell:pushToS3'],
-                        "dynamoDBAssets": ['shell:buildDynamoAssetsLocally', 'shell:pushToS3', 'shell:cleanTempFiles']
+                        "s3Assets": [
+                                      'shell:buildS3AssetsLocally', 
+                                      'shell:pushToS3'
+                        ],
+                        "dynamoDBAssets": [
+                                      'shell:buildDynamoAssetsLocally', 
+                                      'shell:pushToS3', 
+                                      'shell:cleanTempFiles'
+                        ]
                     }
                 }
             }, true);
