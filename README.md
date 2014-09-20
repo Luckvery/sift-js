@@ -1,5 +1,5 @@
 
-<img src="img/siftbro.png" align="middle"></img>
+![](https://github.com/Luckvery/sift-js/raw/master/img/siftbro.png)
 
 # Sift 
 *Validations on steriods*
