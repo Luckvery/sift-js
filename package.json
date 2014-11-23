@@ -4,14 +4,17 @@
   "description": "Run your parameters through the Sift for validation;defining rules upfront, simplifying your js implementations",
   "main": "Sift.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jasmine-node spec/"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/Luckvery/sift-js.git"
   },
   "keywords": [
-    "validation", "argument-parser", "parser", "parsing"
+    "validation",
+    "argument-parser",
+    "parser",
+    "parsing"
   ],
   "author": "Russell John-Baptiste <russell.john.baptiste@gmail.com> (https://github.com/Luckvery)",
   "license": "MIT",
