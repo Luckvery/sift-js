@@ -1,10 +1,13 @@
-define(['Sift'], function(Sift) {
-    var testSiftCall
-    beforeEach(function() {            
+    var Sift = require("../Sift");
+    var _ = require("lodash");
+    var testSiftCall;
+
+
+    beforeEach(function() {
         testSiftCall = function(siftConfig) {
             return function() {var inputObj = Sift(siftConfig); return inputObj;};
-        }                        
-    });   
+        }
+    });
 
 
     describe("Testing Sift Object\'s Contract Property", function() {
@@ -38,7 +41,7 @@ define(['Sift'], function(Sift) {
 
         it("Contract property should be an array", function() {
             var inputObj = contractSiftCall(["foo", "bar"])();
-          
+
             expect(inputObj.foo).toBeDefined();
             expect(inputObj.bar).toBeDefined();
             expect(inputObj.foo).toBeFalsy();
@@ -63,7 +66,7 @@ define(['Sift'], function(Sift) {
             var inputObj = passingArgsArgumentsObj();
 
             expect(inputObj.foo).toBe("");
-            expect(inputObj.bar).toBe("");            
+            expect(inputObj.bar).toBe("");
         });
 
         it("Args property may be an Array", function() {
@@ -78,7 +81,7 @@ define(['Sift'], function(Sift) {
             }
             var inputObj = passingArgsArr();
             expect(inputObj.foo).toBe("");
-            expect(inputObj.bar).toBe("");            
+            expect(inputObj.bar).toBe("");
         });
 
         it("Args property may be valid json object of parameter name/value pairs", function() {
@@ -93,8 +96,8 @@ define(['Sift'], function(Sift) {
             }
             var inputObj = passingArgsJSON();
             expect(inputObj.foo).toBe("apple");
-            expect(inputObj.bar).toBe("pear");            
-        });        
+            expect(inputObj.bar).toBe("pear");
+        });
 
         it("Order of name/value pairs passed to args does not matter", function() {
             var passingArgsOrder1 = function() {
@@ -115,7 +118,7 @@ define(['Sift'], function(Sift) {
                     rules: {}
                 });
                 return inputObj;
-            }            
+            }
 
             var inputObjOrder1 = passingArgsOrder1();
             var inputObjOrder2 = passingArgsOrder2();
@@ -124,13 +127,13 @@ define(['Sift'], function(Sift) {
             expect(inputObjOrder2.foo).toEqual("apple");
             expect(inputObjOrder1.bar).toEqual("pear");
             expect(inputObjOrder2.bar).toEqual("pear");
-            expect(inputObjOrder1.foo).toEqual(inputObjOrder2.foo);     
-            expect(inputObjOrder1.bar).toEqual(inputObjOrder2.bar);     
+            expect(inputObjOrder1.foo).toEqual(inputObjOrder2.foo);
+            expect(inputObjOrder1.bar).toEqual(inputObjOrder2.bar);
         });
 
 
         it("As array Args property must be even number sized", function() {
- 
+
             var oddSizedArgsSiftCallWithArr = function() {
                 return function(){
                     var inputObj = Sift({
@@ -139,12 +142,12 @@ define(['Sift'], function(Sift) {
                         failOnError: true,
                         rules: {}
                     });
-                };                    
+                };
             }
-  
+
             expect(oddSizedArgsSiftCallWithArr()).toThrow(
                 new Error('Sift violation: Bad argument count, missing value of one argument in set: [foo,bar]')
-            );            
+            );
 
         });
 
@@ -159,11 +162,11 @@ define(['Sift'], function(Sift) {
                         rules: {}
                     });
                 };
-            }            
+            }
 
             expect(oddSizedArgsSiftCallWithArgObj("foo", "good", "bar")).toThrow(
                 new Error('Sift violation: Bad argument count, missing value of one argument in set: [foo,bar]')
-            );            
+            );
 
         });
 
@@ -195,7 +198,7 @@ define(['Sift'], function(Sift) {
                     args: arguments,
                     failOnError: true,
                     rules: {}
-                });                 
+                });
             }
             inputObj = properlyFormatedArgs(parameterName1, parameterValue1, parameterName2, parameterValue2);
 
@@ -204,11 +207,11 @@ define(['Sift'], function(Sift) {
 
             expect(inputObj.foo).toBe("WOW");
             expect(inputObj.bar).toBe("AWESOME");
-              
+
         });
 
         it("Calling Sift with Args as object literal with parameters that are not in the contract will fail", function() {
-      
+
             var argsOLPropertiesNotInContract = function() {
                 var argumentsOb  = arguments;
                 return function(){
@@ -219,15 +222,15 @@ define(['Sift'], function(Sift) {
                         rules: {}
                     });
                 };
-            }            
+            }
 
             expect(argsOLPropertiesNotInContract()).toThrow(
                 new Error('Sift violation: Argument "bazz" is not valid: valid argument(s): [foo,bar]')
-            );                  
-        });    
+            );
+        });
 
         it("Calling Sift with Args as array with parameters that are not in the contract will fail", function() {
-      
+
             var argsArrayPropertiesNotInContract = function() {
                 return function(){
                     var inputObj = Sift({
@@ -237,15 +240,15 @@ define(['Sift'], function(Sift) {
                         rules: {}
                     });
                 };
-            }            
+            }
 
             expect(argsArrayPropertiesNotInContract()).toThrow(
                 new Error('Sift violation: Argument "bazz" is not valid: valid argument(s): [foo,bar]')
-            );                  
-        });    
+            );
+        });
 
         it("Calling Sift with Args as arguments object with parameters that are not in the contract will fail", function() {
-      
+
             var argsArgumentsPropertiesNotInContract = function() {
                 var argumentsOb  = arguments;
                 return function(){
@@ -256,11 +259,11 @@ define(['Sift'], function(Sift) {
                         rules: {}
                     });
                 };
-            }            
+            }
 
             expect(argsArgumentsPropertiesNotInContract("bazz","apple", "kazz","pear")).toThrow(
                 new Error('Sift violation: Argument "bazz" is not valid: valid argument(s): [foo,bar]')
-            );                  
+            );
         });
 
         it("Calling Sift with Args as object literal ommitting Args parameters that are in the contract is ok", function() {
@@ -276,8 +279,8 @@ define(['Sift'], function(Sift) {
             var inputObj = passingArgsJSON();
 
             expect(inputObj.foo).toBe("");
-            expect(inputObj.bar).toBe("pear");            
-        });  
+            expect(inputObj.bar).toBe("pear");
+        });
 
         it("Calling Sift with Args as array ommitting Args parameters that are in the contract is ok", function() {
             var passingArgsJSON = function() {
@@ -291,8 +294,8 @@ define(['Sift'], function(Sift) {
             }
             var inputObj = passingArgsJSON();
             expect(inputObj.foo).toBe("");
-            expect(inputObj.bar).toBe("pear");            
-        });  
+            expect(inputObj.bar).toBe("pear");
+        });
 
         it("Calling Sift with Args as arguments object ommitting Args parameters that are in the contract is ok", function() {
             var argumentsObjWithLessThanContract = function() {
@@ -307,10 +310,10 @@ define(['Sift'], function(Sift) {
             }
             var inputObj = argumentsObjWithLessThanContract("bar", "pear");
             expect(inputObj.foo).toBe("");
-            expect(inputObj.bar).toBe("pear");            
-        });   
+            expect(inputObj.bar).toBe("pear");
+        });
 
-     });
+    });
 
     describe("Testing Sift Object\'s Rules Property", function() {
 
@@ -320,12 +323,12 @@ define(['Sift'], function(Sift) {
                     args: ["foo", "apple", "bar", "pear"],
                     failOnError: true,
                     rules: {}
-                };                    
-        });        
-        
+                };
+        });
+
         describe("Testing Rules Property format", function() {
 
-            it("Rules property should be an object", function() {            
+            it("Rules property should be an object", function() {
                 SiftObjectWithOutRules.rules  = "";
                 expect(testSiftCall(SiftObjectWithOutRules)).toThrow(
                     new Error('Sift violation: Rules must be Object Literal')
@@ -354,10 +357,10 @@ define(['Sift'], function(Sift) {
                 SiftObjectWithOutRules.args  =  ["foo", "apple"];
                 expect(testSiftCall(SiftObjectWithOutRules)).not.toThrow();
 
-                var inputObj = testSiftCall(SiftObjectWithOutRules)();    
+                var inputObj = testSiftCall(SiftObjectWithOutRules)();
                 expect(inputObj.foo).toBeDefined();
                 expect(inputObj.foo).toBe("apple");
-                expect(inputObj.bar).toBe("");           
+                expect(inputObj.bar).toBe("");
             });
 
             it("More than one parameter from rules.exclusive group present in args and Sift will throw error", function() {
@@ -368,8 +371,8 @@ define(['Sift'], function(Sift) {
                 SiftObjectWithOutRules.args  =  ["foo", "apple", "bar", "pear"];
                 expect(testSiftCall(SiftObjectWithOutRules)).toThrow(
                     new Error("Sift.rules.exclusive violation: Only 1 argument is allowed in this group: foo,bar")
-                );                
-            });            
+                );
+            });
         });
 
         describe("Testing Sift Object\'s Rules.requires Property", function() {
@@ -389,7 +392,7 @@ define(['Sift'], function(Sift) {
                 SiftObjectWithOutRules.args  =  ["foo", "apple"];
                 expect(testSiftCall(SiftObjectWithOutRules)).toThrow(
                     new Error("Sift.rules.requires violation: If foo exists as an argument, then bar must be present as an argument")
-                );   
+                );
 
             });
 
@@ -400,14 +403,14 @@ define(['Sift'], function(Sift) {
                 };
 
                 expect(testSiftCall(SiftObjectWithOutRules)).not.toThrow();
-                var inputObj = testSiftCall(SiftObjectWithOutRules)();     
+                var inputObj = testSiftCall(SiftObjectWithOutRules)();
                 expect(inputObj.foo).toBeDefined();
                 expect(inputObj.foo).toBe("apple");
                 expect(inputObj.bar).toBeDefined();
                 expect(inputObj.bar).toBe("pear");
 
-            });            
-           
+            });
+
         });
 
         describe("Testing Sift Object\'s Rules.only Property", function() {
@@ -427,11 +430,11 @@ define(['Sift'], function(Sift) {
 
                 expect(testSiftCall(SiftObjectWithOutRules)).not.toThrow();
 
-                var inputObj = testSiftCall(SiftObjectWithOutRules)();    
+                var inputObj = testSiftCall(SiftObjectWithOutRules)();
                 expect(inputObj.foo).toBeDefined();
                 expect(inputObj.foo).toBe("apple");
                 expect(inputObj.bar).toBeDefined();
-                expect(inputObj.bar).toBe("pear");                  
+                expect(inputObj.bar).toBe("pear");
 
             });
 
@@ -447,9 +450,9 @@ define(['Sift'], function(Sift) {
                 );
 
             });
-           
+
         });
-     
+
         describe("Testing Sift Object\'s Rules.atleastOne Property", function() {
             it("Rules.atleastOne property should be an boolean or undefined", function() {
                 SiftObjectWithOutRules.rules.atLeastOne  =  "";
@@ -461,11 +464,11 @@ define(['Sift'], function(Sift) {
 
                 SiftObjectWithOutRules.args  =  ["foo", "apple"];
                 expect(testSiftCall(SiftObjectWithOutRules)).not.toThrow();
-                var inputObj = testSiftCall(SiftObjectWithOutRules)();     
+                var inputObj = testSiftCall(SiftObjectWithOutRules)();
                 expect(inputObj.foo).toBeDefined();
                 expect(inputObj.foo).toBe("apple");
 
-            });     
+            });
 
             it("Sift error is thrown if Rules.atleastOne property is true and no argument from the contract array is present", function() {
                 SiftObjectWithOutRules.rules.atLeastOne  =  true;
@@ -474,7 +477,7 @@ define(['Sift'], function(Sift) {
                 expect(testSiftCall(SiftObjectWithOutRules)).toThrow(
                     new Error('Sift.rules.atLeastOne violation: At least one argument is required: [foo,bar]')
                 );
-            });                     
+            });
         });
 
         describe("Testing Sift Object\'s Rules.type Property", function() {
@@ -494,12 +497,12 @@ define(['Sift'], function(Sift) {
                 SiftObjectWithOutRules.args  =  ["foo", "apple","bar", 10743];
                 expect(testSiftCall(SiftObjectWithOutRules)).not.toThrow();
 
-                var inputObj = testSiftCall(SiftObjectWithOutRules)();    
+                var inputObj = testSiftCall(SiftObjectWithOutRules)();
                 expect(inputObj.foo).toBeDefined();
                 expect(inputObj.foo).toBe("apple");
                 expect(inputObj.bar).toBeDefined();
-                expect(inputObj.bar).toBe(10743);   
-            });      
+                expect(inputObj.bar).toBe(10743);
+            });
 
             it("Sift will throw error if args contains parameters with corresponding types that conflict with Rules.type property", function() {
 
@@ -516,9 +519,9 @@ define(['Sift'], function(Sift) {
                 SiftObjectWithOutRules.args  =  ["foo", 10743,"bar", "apple"];
                 expect(testSiftCall(SiftObjectWithOutRules)).toThrow(
                     new Error('Sift.rules.type violation: Type check fail for value 10743 of foo. Expected type: [String]')
-                );                
-            });            
-           
+                );
+            });
+
         });
 
         describe("Testing Sift Object\'s Rules.custom Property", function() {
@@ -531,12 +534,12 @@ define(['Sift'], function(Sift) {
 
             it("Parameters will be evaluated against function passed to sub key representing parameter", function() {
 
-                SiftObjectWithOutRules.rules.custom  =  
+                SiftObjectWithOutRules.rules.custom  =
                 {
                    "foo":function(value){
-                        return _.contains( value.toLowerCase(), "p");
+                        return !!~value.toLowerCase().indexOf("p");
                     }
-                }; 
+                };
 
                 expect(testSiftCall(SiftObjectWithOutRules)).not.toThrow();
                 var inputObj = testSiftCall(SiftObjectWithOutRules)();
@@ -552,17 +555,17 @@ define(['Sift'], function(Sift) {
                 expect(testSiftCall(SiftObjectWithOutRules)).toThrow(
                     new Error('Sift.rules.oneForAll violation: If present Rules.oneForAll property should be an array')
                 );
-            });            
+            });
 
             it("If one param in Rules.oneForAll property exists in Sift.args then all params in Rules.oneForAll must be present", function() {
                 SiftObjectWithOutRules.rules.oneForAll  = ["foo", "bar"];
                 expect(testSiftCall(SiftObjectWithOutRules)).not.toThrow();
 
-                var inputObj = testSiftCall(SiftObjectWithOutRules)();    
+                var inputObj = testSiftCall(SiftObjectWithOutRules)();
                 expect(inputObj.foo).toBeDefined();
                 expect(inputObj.foo).toBe("apple");
                 expect(inputObj.bar).toBeDefined();
-                expect(inputObj.bar).toBe("pear");    
+                expect(inputObj.bar).toBe("pear");
             });
 
             it("Sift throws error if 1 or more argument in Rules.oneForAll property group is specified and not in Sift.args", function() {
@@ -575,7 +578,7 @@ define(['Sift'], function(Sift) {
         });
 
         describe("Testing Sift Object\'s Rules.defaults Property", function() {
-            
+
             it("Rules.defaults property should be an object", function() {
                 SiftObjectWithOutRules.rules.defaults  = "";
                 expect(testSiftCall(SiftObjectWithOutRules)).toThrow(
@@ -585,7 +588,7 @@ define(['Sift'], function(Sift) {
 
             it("Param in Rules.defaults property is applied when param is not present in args array", function() {
                 var obviousFunction = function(thing){ return "A pear is green";};
-               
+
                 SiftObjectWithOutRules.args      = ["truck", "rough"];
                 SiftObjectWithOutRules.contract  = ["truck", "car"];
 
@@ -594,19 +597,19 @@ define(['Sift'], function(Sift) {
                 };
 
                 expect(testSiftCall(SiftObjectWithOutRules)).not.toThrow();
-                var inputObj = testSiftCall(SiftObjectWithOutRules)(); 
+                var inputObj = testSiftCall(SiftObjectWithOutRules)();
 
                 expect(inputObj.truck).toBeDefined();
                 expect(inputObj.truck).toBe("rough");
                 expect(inputObj.car).toBeDefined();
-                expect(inputObj.car).toBe("dogg");  
-            });   
- 
-            describe("Rules.defaults property is applied BEFORE Rules.map", function() { 
-                
+                expect(inputObj.car).toBe("dogg");
+            });
+
+            describe("Rules.defaults property is applied BEFORE Rules.map", function() {
+
                 it("Param in Rules.defaults property is applied when param is present in args array", function() {
                     var obviousFunction = function(thing){ return "A pear is green";};
-                   
+
                     SiftObjectWithOutRules.args      = ["truck", "rough",  "car", "dogg"];
                     SiftObjectWithOutRules.contract  = ["truck", "car"];
 
@@ -623,7 +626,7 @@ define(['Sift'], function(Sift) {
                         }
                     }
                     expect(testSiftCall(SiftObjectWithOutRules)).not.toThrow();
-                    var inputObj = testSiftCall(SiftObjectWithOutRules)(); 
+                    var inputObj = testSiftCall(SiftObjectWithOutRules)();
 
                     //"truck" present in Sift.args, "rough" to "An apple is red" map applied
                     expect(inputObj.truck).toBeDefined();
@@ -631,13 +634,13 @@ define(['Sift'], function(Sift) {
 
                     //"car" present in Sift.args, "dogg" to "function" map applied
                     expect(inputObj.car).toBeDefined();
-                    expect(inputObj.car).toBe(obviousFunction);  
-                });            
+                    expect(inputObj.car).toBe(obviousFunction);
+                });
 
 
                 it("Param value in Rules.map property is still applied when param is not present in args array", function() {
                     var obviousFunction = function(thing){ return "A pear is green";};
-                   
+
                     SiftObjectWithOutRules.args      = ["truck", "rough"];
                     SiftObjectWithOutRules.contract  = ["truck", "car"];
 
@@ -654,7 +657,7 @@ define(['Sift'], function(Sift) {
                         }
                     }
                     expect(testSiftCall(SiftObjectWithOutRules)).not.toThrow();
-                    var inputObj = testSiftCall(SiftObjectWithOutRules)();  
+                    var inputObj = testSiftCall(SiftObjectWithOutRules)();
 
                     //"truck" present in Sift.args, "rough" to "An apple is red" map applied
                     expect(inputObj.truck).toBeDefined();
@@ -662,19 +665,19 @@ define(['Sift'], function(Sift) {
 
                     //"car" not present in Sift.args, "dogg" to "function" still applied
                     expect(inputObj.car).toBeDefined();
-                    expect(inputObj.car).toBe(obviousFunction);  
-                });       
-            });            
+                    expect(inputObj.car).toBe(obviousFunction);
+                });
+            });
         });
 
         describe("Testing Sift Object\'s Rules.required Property", function() {
-            
+
             it("Rules.required property should be an array", function() {
                 SiftObjectWithOutRules.rules.required  =  "";
                 expect(testSiftCall(SiftObjectWithOutRules)).toThrow(
                     new Error('Sift.rules.required violation: If present Rules.required property should be an array')
                 );
-            });            
+            });
 
             it("Rules.required property created says if bar is not present, Sift throws error", function() {
                 SiftObjectWithOutRules.rules.required = ["bar"] ;
@@ -686,15 +689,15 @@ define(['Sift'], function(Sift) {
 
             it("Rules.required property created says if bar is not present, Sift throws error", function() {
                 SiftObjectWithOutRules.rules.required = ["foo", "bar"] ;
-  
+
                 expect(testSiftCall(SiftObjectWithOutRules)).not.toThrow();
-                var inputObj = testSiftCall(SiftObjectWithOutRules)();     
+                var inputObj = testSiftCall(SiftObjectWithOutRules)();
                 expect(inputObj.foo).toBeDefined();
                 expect(inputObj.foo).toBe("apple");
                 expect(inputObj.bar).toBeDefined();
-                expect(inputObj.bar).toBe("pear");  
+                expect(inputObj.bar).toBe("pear");
             });
-             
+
         });
 
         describe("Testing Sift Object\'s Rules.map Property", function() {
@@ -704,7 +707,7 @@ define(['Sift'], function(Sift) {
                     new Error('Sift.rules.map violation: If present Rules.map property should be an object')
                 );
             });
-            
+
             it("Rules.map property does not have to be defined", function() {
 
                 var obviousFunction = function(thing){ return "A pear is green";};
@@ -718,12 +721,12 @@ define(['Sift'], function(Sift) {
                     }
                 }
                 expect(testSiftCall(SiftObjectWithOutRules)).not.toThrow();
-                var inputObj = testSiftCall(SiftObjectWithOutRules)();    
+                var inputObj = testSiftCall(SiftObjectWithOutRules)();
                 expect(inputObj.foo).toBeDefined();
                 expect(inputObj.foo).toBe("An apple is red");
                 expect(inputObj.bar).toBeDefined();
-                expect(inputObj.bar).toBe(obviousFunction);    
-            });            
+                expect(inputObj.bar).toBe(obviousFunction);
+            });
 
             it("Rules.map property does not have to be defined in Sift.args", function() {
                 var obviousFunction = function(){ return "A pear is green";};
@@ -736,16 +739,16 @@ define(['Sift'], function(Sift) {
                         "pear"  : obviousFunction
                     }
                 }
-                var inputObj = testSiftCall(SiftObjectWithOutRules)();    
+                var inputObj = testSiftCall(SiftObjectWithOutRules)();
                 expect(inputObj.foo).toBeDefined();
                 expect(inputObj.foo).toBe("apple");
                 expect(inputObj.bar).toBeDefined();
-                expect(inputObj.bar).toBe("pear");    
+                expect(inputObj.bar).toBe("pear");
             });
 
         });
     });
-    
+
     describe("Testing Sift Object\'s failOnError Property", function() {
         var SiftObjectWithOutFailOnError;
         var inputObj;
@@ -756,17 +759,17 @@ define(['Sift'], function(Sift) {
                     args: ["foo", "apple", "bar", "pear"],
                     rules: {}
                 };
-                               
-        });  
+
+        });
 
         it("Sift.failOnError property does not have to be defined", function() {
             expect(testSiftCall(SiftObjectWithOutFailOnError)).not.toThrow();
 
-            inputObj = testSiftCall(SiftObjectWithOutFailOnError)();    
+            inputObj = testSiftCall(SiftObjectWithOutFailOnError)();
             expect(inputObj.foo).toBeDefined();
             expect(inputObj.foo).toBe("apple");
             expect(inputObj.bar).toBeDefined();
-            expect(inputObj.bar).toBe("pear");    
+            expect(inputObj.bar).toBe("pear");
         });
 
 
@@ -778,7 +781,7 @@ define(['Sift'], function(Sift) {
             SiftObjectWithOutFailOnError.failOnError  =  3543455;
             expect(testSiftCall(SiftObjectWithOutFailOnError)).toThrow(
                 new Error('Sift violation: 3543455 not a valid value. If defined failOnError must be a boolean')
-            );            
+            );
         });
 
         describe("If Sift.failOnError property is set to false and error condition exists, Sift will return false", function() {
@@ -786,19 +789,19 @@ define(['Sift'], function(Sift) {
             var exampleSiftObj;
 
             beforeEach(function() {
-                SiftObjectWithOutFailOnError.failOnError  =  false;       
+                SiftObjectWithOutFailOnError.failOnError  =  false;
                 exampleSiftObj = SiftObjectWithOutFailOnError;
-            });  
+            });
 
             it("Sift.args: As array Args property must be even number sized", function() {
-                exampleSiftObj.args  =  ["foo", "apple", "bar"];       
-                inputObj  = testSiftCall(exampleSiftObj)();  
+                exampleSiftObj.args  =  ["foo", "apple", "bar"];
+                inputObj  = testSiftCall(exampleSiftObj)();
                 expect(inputObj).toBe(false);
             });
 
             it("Sift.rules.map: Rules.map property should be an object", function() {
-                exampleSiftObj.rules.map  =  "";      
-                inputObj  = testSiftCall(exampleSiftObj)();  
+                exampleSiftObj.rules.map  =  "";
+                inputObj  = testSiftCall(exampleSiftObj)();
                 expect(inputObj).toBe(false);
             });
 
@@ -806,46 +809,46 @@ define(['Sift'], function(Sift) {
                 exampleSiftObj.rules.only  = {
                         "foo": ["apple", "orange"],
                         "bar": ["pear", "banana"]
-                };     
+                };
                 exampleSiftObj.args = ["foo", "pineapple"];
 
-                inputObj  = testSiftCall(exampleSiftObj)();  
+                inputObj  = testSiftCall(exampleSiftObj)();
                 expect(inputObj).toBe(false);
             });
 
             it("Sift.rules.required: Rules.required property created says if bar is not present, Sift throws error", function() {
                 exampleSiftObj.rules.required = ["bar"] ;
                 exampleSiftObj.args  =  ["foo", "apple"];
-                inputObj  = testSiftCall(exampleSiftObj)();  
+                inputObj  = testSiftCall(exampleSiftObj)();
                 expect(inputObj).toBe(false);
             });
 
-            it("Sift.rules.exclusive: More than one parameter from rules.exclusive group present in args and Sift will throw error", function() {                    
+            it("Sift.rules.exclusive: More than one parameter from rules.exclusive group present in args and Sift will throw error", function() {
                 exampleSiftObj.rules.exclusive  = [
                     ["foo", "bar"]
                 ];
-                inputObj  = testSiftCall(exampleSiftObj)();  
-                expect(inputObj).toBe(false);                                     
-            });   
+                inputObj  = testSiftCall(exampleSiftObj)();
+                expect(inputObj).toBe(false);
+            });
 
             it("Sift.contract: Contract property must contain at least 1 property", function() {
                 exampleSiftObj.contract  =  [];
-                inputObj  = testSiftCall(exampleSiftObj)();  
-                expect(inputObj).toBe(false);                    
-            });                
+                inputObj  = testSiftCall(exampleSiftObj)();
+                expect(inputObj).toBe(false);
+            });
 
             it("Sift.rules.custom: Parameters will be evaluated against function passed to sub key representing parameter", function() {
 
-                exampleSiftObj.rules.custom  =  
+                exampleSiftObj.rules.custom  =
                 {
                    "foo":function(value){
-                        return _.contains( value.toLowerCase(), "x");
+                        return !!~value.toLowerCase().indexOf('x');
                     }
-                }; 
+                };
 
-                inputObj  = testSiftCall(exampleSiftObj)();  
-                expect(inputObj).toBe(false);   
-            });                
+                inputObj  = testSiftCall(exampleSiftObj)();
+                expect(inputObj).toBe(false);
+            });
 
             it("Sift.rules.type: Sift will throw error if args contains parameters with corresponding types that conflict with Rules.type property", function() {
 
@@ -855,32 +858,32 @@ define(['Sift'], function(Sift) {
                 };
 
                 exampleSiftObj.args  =  ["foo", "10743","bar", "apple"];
-                inputObj  = testSiftCall(exampleSiftObj)();  
-                expect(inputObj).toBe(false);   
+                inputObj  = testSiftCall(exampleSiftObj)();
+                expect(inputObj).toBe(false);
 
                 exampleSiftObj.args  =  ["foo", 10743,"bar", "apple"];
-                inputObj  = testSiftCall(exampleSiftObj)();  
-                expect(inputObj).toBe(false);               
-            });    
+                inputObj  = testSiftCall(exampleSiftObj)();
+                expect(inputObj).toBe(false);
+            });
 
             it("Sift.rules.atleastOne: Sift error is thrown if Rules.atleastOne property is true and no argument from the contract array is present", function() {
                 exampleSiftObj.rules.atLeastOne  =  true;
                 exampleSiftObj.args  =  [];
-                inputObj  = testSiftCall(exampleSiftObj)();  
-                expect(inputObj).toBe(false);  
-            }); 
+                inputObj  = testSiftCall(exampleSiftObj)();
+                expect(inputObj).toBe(false);
+            });
 
             it("Sift.rules.oneForAll: Sift throws error if 1 or more argument in Rules.oneForAll property group is specified and not in Sift.args", function() {
                 exampleSiftObj.rules.oneForAll  = ["foo", "bar"];
                 exampleSiftObj.args  = ["foo", "apple"];
-                inputObj  = testSiftCall(exampleSiftObj)();  
-                expect(inputObj).toBe(false);  
+                inputObj  = testSiftCall(exampleSiftObj)();
+                expect(inputObj).toBe(false);
             });
 
             it("Sift.rules.oneForAll: Rules.defaults property should be an object", function() {
                 exampleSiftObj.rules.defaults  = "";
-                inputObj  = testSiftCall(exampleSiftObj)();  
-                expect(inputObj).toBe(false); 
+                inputObj  = testSiftCall(exampleSiftObj)();
+                expect(inputObj).toBe(false);
             });
 
             it("Sift.rules.requires: Rules.requires property created says if foo is present and bar is not present, Sift throws error", function() {
@@ -890,15 +893,197 @@ define(['Sift'], function(Sift) {
                 };
 
                 exampleSiftObj.args  =  ["foo", "apple"];
-                inputObj  = testSiftCall(exampleSiftObj)();  
-                expect(inputObj).toBe(false);   
+                inputObj  = testSiftCall(exampleSiftObj)();
+                expect(inputObj).toBe(false);
 
             });
 
         });
     });
-});
-// var inputObj = Sift({
+
+    describe("Testing Siftified Functions", function() {
+
+        it("Passing a config 'fnConfig' and a function 'fn' to Sift should return a function whose parameters will " +
+        "be evaluated against 'fnConfig'", function() {
+
+            var cool = function (name, email){
+                return name + email;
+            };
+              var fnConfig = {
+                  contract: ["name", "email"],
+                  failOnError: true,
+                  rules: {
+                      required: ["name", "email"]
+                  }
+              };
+
+            var fn = Sift(fnConfig, cool);
+
+            expect(fn instanceof Function).toBe(true);
+
+            expect(function(){ fn(); } ).toThrow(
+                new Error('Sift violation: Argument list must be an array, argument object or object literal of argument name/value pairs')
+            );
+
+            expect(function(){ Sift(fnConfig, "You didn't have to cut me off"); } ).toThrow(
+                new Error('Expected function to siftify or collection to evaluate')
+            );
+
+        });
+        it("Passing a config 'fnConfig' and a function 'fn' to Sift should return a function whose parameters will " +
+        "be evaluated against 'fnConfig'", function() {
+
+            var cool = function (name, email){
+                return name + email;
+            };
+              var fnConfig = {
+                  contract: ["name", "email"],
+                  failOnError: true,
+                  rules: {
+                      required: ["name", "email"]
+                  }
+              };
+
+            var fn = Sift(fnConfig, cool);
+
+            expect(fn instanceof Function).toBe(true);
+
+            expect(function(){ fn(); } ).toThrow(
+                new Error('Sift violation: Argument list must be an array, argument object or object literal of argument name/value pairs')
+            );
+
+        });
+
+        it("Siftified functions take json object of parameter name/value pairs", function() {
+
+            var cool = function (name, email){
+                return name + email;
+            };
+            var fn = Sift({
+                contract: ["name", "email"],
+                failOnError: true,
+                rules: {
+                    required: ["name", "email"]
+                }
+            }, cool);
+
+
+            expect(function(){ fn({}); } ).toThrow(
+                new Error('Sift.rules.required violation: 1 or more required argument(s) missing. Required argument(s): name,email')
+            );
+
+            expect(function(){ fn({"name":"Russell", "email":"cool@gmail.com"}); } ).not.toThrow();
+        });
+
+
+        it("Siftified functions take array of name/value pairs", function() {
+
+            var cool = function (name, email){
+                return name + email;
+            };
+            var fn = Sift({
+                contract: ["name", "email"],
+                failOnError: true,
+                rules: {
+                    required: ["name", "email"]
+                }
+            }, cool);
+
+
+            expect(function(){ fn({}); } ).toThrow(
+                new Error('Sift.rules.required violation: 1 or more required argument(s) missing. Required argument(s): name,email')
+            );
+            expect(function(){ fn(); } ).toThrow(
+                new Error('Sift violation: Argument list must be an array, argument object or object literal of argument name/value pairs')
+            );
+
+            expect(function(){fn(["name", "Russell", "email","cool@gmail.com"]); }).not.toThrow();
+        });
+
+        it("Siftified functions take argument object", function() {
+
+            var cool = function (name, email){
+                return name + email;
+            };
+
+            var fn = Sift({
+                contract: ["name", "email"],
+                failOnError: true,
+                rules: {
+                    required: ["name", "email"]
+                }
+            }, cool);
+
+            var wrapper = function () {
+                fn(arguments);
+            };
+
+            expect(function () {wrapper(["name", "Russell", "email","cool@gmail.com"])}).not.toThrow();
+        });
+
+    });
+
+    describe("Testing Sift Collections", function() {
+
+        it("Given a config 'fnConfig' and a collection 'col' Sift will throw an error if any object in collection " +
+            "fails to be validation when evaluated against 'fnConfig'", function() {
+
+            var col = [
+                {"name":"Russell", "email":"russell@gmail.com"},
+                {"name":"David", "email":"david@gmail.com"},
+                {"name":"Paul", "email":"paul@gmail.com"},
+                {"name":"Shawn"},
+                {"name":"Fred", "email":"fred@gmail.com"},
+                {"name":"Dennis", "email":"dennis@gmail.com"},
+                {"name":"Andrew", "email":"andrew@gmail.com"}
+            ];
+
+            var fnConfig = {
+              contract: ["name", "email"],
+              failOnError: true,
+              rules: {
+                  required: ["name", "email"]
+              }
+            };
+
+            expect(function(){ Sift(fnConfig, col);} ).toThrow(
+                new Error('Sift.rules.required violation: 1 or more required argument(s) missing. Required argument(s): name,email')
+            );
+        });
+
+        it("Given a config 'fnConfig' and a collection 'col' Sift will return the collection if all objects " +
+            "in collection evaluated against 'fnConfig' are valid", function() {
+
+            var col = [
+                {"name":"Russell", "email":"russell@gmail.com"},
+                {"name":"David", "email":"david@gmail.com"},
+                {"name":"Paul", "email":"paul@gmail.com"},
+                {"name":"Shawn", "email":"shawn@gmail.com"},
+                {"name":"Fred", "email":"fred@gmail.com"},
+                {"name":"Dennis", "email":"dennis@gmail.com"},
+                {"name":"Andrew", "email":"andrew@gmail.com"}
+            ];
+
+            var fnConfig = {
+              contract: ["name", "email"],
+              failOnError: true,
+              rules: {
+                  required: ["name", "email"]
+              }
+            };
+
+            var assetAllObjectsInOriginalCollectionAreReturnedBySift = function () {
+                return _.every(Sift(fnConfig, col), function (obj) {
+                    return !_.isEmpty(_.where(col, obj));
+                }.bind(this));
+            };
+
+            expect(assetAllObjectsInOriginalCollectionAreReturnedBySift()).toBe(true);
+        });
+
+    });
+
+    // var inputObj = Sift({
 //         contract:["url", "named", "butler", "reconcile", "shell", "config", "year"],
 //         args: this.args,
 //         failOnError: true,
