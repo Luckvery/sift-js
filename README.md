@@ -178,6 +178,7 @@ fooBar(){
         contract:["url", "named", "clientId", "reconcile", "shell", "config", "year"],
         args: this.args,
         failOnError: true,
+        pairedArgs: true,
         rules:{
                 exclusive: [
                     ["url", "named"]
