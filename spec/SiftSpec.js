@@ -919,35 +919,7 @@
         "be evaluated against 'fnConfig'", function() {
 
             var cool = function (name, email){
-                return name + email;
-            };
-              var fnConfig = {
-                  contract: ["name", "email"],
-                  failOnError: true,
-                  rules: {
-                      required: ["name", "email"]
-                  }
-              };
-
-            var fn = Sift(fnConfig, cool);
-
-            expect(fn instanceof Function).toBe(true);
-
-            expect(function(){ fn(); } ).toThrow(
-                new Error('Sift violation: Argument list must be an array, argument object or object literal of argument name/value pairs')
-            );
-
-            expect(function(){ Sift(fnConfig, "You didn't have to cut me off"); } ).toThrow(
-                new Error('Expected function to siftify or collection to evaluate')
-            );
-
-        });
-
-        it("Passing a config 'fnConfig' and a function 'fn' to Sift should return a function whose parameters will " +
-        "be evaluated against 'fnConfig'", function() {
-
-            var cool = function (obj){
-                return obj.name + " can't be reached at " +  obj.email;
+                return name + " can't be reached at " + email;
             };
 
             var fnConfig = {
@@ -963,83 +935,51 @@
             expect(fn instanceof Function).toBe(true);
 
             expect(function(){ fn(); } ).toThrow(
-                new Error('Sift violation: Argument list must be an array, argument object or object literal of argument name/value pairs')
-            );
-
-        });
-
-        it("Siftified functions take json object of parameter name/value pairs", function() {
-
-            var cool = function (obj){
-                return obj.name + " can't be reached at " +  obj.email;
-            };
-
-            var fn = Sift({
-                contract: ["name", "email"],
-                failOnError: true,
-                rules: {
-                    required: ["name", "email"]
-                }
-            }, cool);
-
-
-            expect(function(){ fn({}); } ).toThrow(
                 new Error('Sift.rules.required violation: 1 or more required argument(s) missing. Required argument(s): name,email')
             );
 
-            expect(function(){ fn({"name":"Russell", "email":"cool@gmail.com"}); } ).not.toThrow();
+            expect(function(){ Sift(fnConfig, "You didn't have to cut me off"); } ).toThrow(
+                new Error('Expected function to siftify or collection to evaluate')
+            );
 
             expect(function(){
-                return fn({"name":"Russell", "email":"notreallyrussell@gmail.com"});
+                return fn("Russell", "notreallyrussell@gmail.com");
             }.bind(this)()).toEqual("Russell can't be reached at notreallyrussell@gmail.com");
 
         });
 
+        it("Passing a config 'fnConfig' and a function 'fn' to Sift should return a function whose parameters will " +
+        "be evaluated against 'fnConfig'", function() {
 
-        it("Siftified functions take array of name/value pairs", function() {
-
-            var cool = function (obj){
-                return obj.name + " can't be reached at " +  obj.email;
+            var cool = function (name, email){
+                return name + " can't be reached at " + email;
             };
 
-            var fn = Sift({
+            var fnConfig = {
                 contract: ["name", "email"],
                 failOnError: true,
+                pairedArgs: true, // :)
                 rules: {
-                    required: ["name", "email"]
-                }
-            }, cool);
+                  required: ["name", "email"]
+              }
+            };
 
+            var fn = Sift(fnConfig, cool);
+
+            expect(fn instanceof Function).toBe(true);
 
             expect(function(){ fn({}); } ).toThrow(
+                new Error('Sift violation: Bad argument count, missing value of one argument in set: [name,email]')
+            );
+
+            expect(function(){ fn(); } ).toThrow(
                 new Error('Sift.rules.required violation: 1 or more required argument(s) missing. Required argument(s): name,email')
             );
-            expect(function(){ fn(); } ).toThrow(
-                new Error('Sift violation: Argument list must be an array, argument object or object literal of argument name/value pairs')
-            );
 
-            expect(function(){fn(["name", "Russell", "email","cool@gmail.com"]); }).not.toThrow();
-        });
+            expect(function(){
+                return fn("name", "Russell", "email", "notreallyrussell@gmail.com");
+            }.bind(this)()).toEqual("Russell can't be reached at notreallyrussell@gmail.com");
 
-        it("Siftified functions take argument object", function() {
-
-            var cool = function (obj){
-                return obj.name + " can't be reached at " +  obj.email;
-            };
-
-            var fn = Sift({
-                contract: ["name", "email"],
-                failOnError: true,
-                rules: {
-                    required: ["name", "email"]
-                }
-            }, cool);
-
-            var wrapper = function () {
-                fn(arguments);
-            };
-
-            expect(function () {wrapper(["name", "Russell", "email","cool@gmail.com"])}).not.toThrow();
         });
 
     });
@@ -1108,7 +1048,7 @@
 //         contract:["url", "named", "butler", "reconcile", "shell", "config", "year"],
 //         args: this.args,
 //         failOnError: true,
-//         mode: "cl", << -- Deprecated
+//         pairedArgs: true,
 //         rules:{
 //                 exclusive: [
 //                     ["url", "named"]
