@@ -71,14 +71,28 @@
                 if (!_.isArguments(config.args) && !_.isArray(config.args) && !_.isPlainObject(config.args) ) {
                     return config.failOnError ? throwError('Sift violation: Argument list must be an array, argument object or object literal of argument name/value pairs') : false;
                 }
+                var mapContractToValues = function(arg){
+                    return _.transform(config.contract, function (result, item, index) {
+                        result.push(item);
+                        result.push(arg[index]);
+                    });
+                };
+
+                var normalizeForUnPairedArguments = function (args) {
+                    args = _.flatten(args)
+                    return config.pairedArgs ? args : mapContractToValues(args);
+                };
+
+                var normalizeForParamValuePairObject = function (args) {
+                    return _.flatten(_.pairs(args));
+                };
 
                 //normalize arguments
                 config.args = _.transform(
-                    _.flatten(
-                        _.isPlainObject(config.args)
-                            ? _.pairs(config.args)
-                            : config.args
-                    ),
+                    _.isPlainObject(config.args)
+                        ? normalizeForParamValuePairObject(config.args)
+                        : normalizeForUnPairedArguments(config.args)
+                    ,
                     function(result, val, key) {
                         result[key] = _.isUndefined(val) ? "" : val;
                     }
@@ -395,7 +409,6 @@
             );
             return thingy;
         }
-
 
         if(!_.isUndefined(thingy)) {
             (function(){ throw new Error("Expected function to siftify or collection to evaluate"); })();

@@ -99,12 +99,13 @@
             expect(inputObj.bar).toBe("pear");
         });
 
-        it("Order of name/value pairs passed to args does not matter", function() {
+        it("Order of name/value pairs passed to args does not matter when pairedArgs is true", function() {
             var passingArgsOrder1 = function() {
                 var inputObj = Sift({
                     contract: ["foo", "bar"],
                     args: ["foo", "apple", "bar", "pear"],
                     failOnError: true,
+                    pairedArgs: true,
                     rules: {}
                 });
                 return inputObj;
@@ -115,6 +116,7 @@
                     contract: ["foo", "bar"],
                     args: [ "bar", "pear", "foo", "apple"],
                     failOnError: true,
+                    pairedArgs: true,
                     rules: {}
                 });
                 return inputObj;
@@ -140,6 +142,7 @@
                         contract: ["foo", "bar"],
                         args: ["foo", "good", "bar"],
                         failOnError: true,
+                        pairedArgs: true,
                         rules: {}
                     });
                 };
@@ -159,6 +162,7 @@
                         contract: ["foo", "bar"],
                         args: argumentsOb,
                         failOnError: true,
+                        pairedArgs: true,
                         rules: {}
                     });
                 };
@@ -183,6 +187,7 @@
                 contract: ["foo", "bar"],
                 args: this.args,
                 failOnError: true,
+                pairedArgs: true,
                 rules: {}
             });
 
@@ -197,6 +202,7 @@
                     contract: ["foo", "bar"],
                     args: arguments,
                     failOnError: true,
+                    pairedArgs: true,
                     rules: {}
                 });
             }
@@ -237,6 +243,7 @@
                         contract: ["foo", "bar"],
                         args: ["bazz","apple", "kazz","pear"],
                         failOnError: true,
+                        pairedArgs: true,
                         rules: {}
                     });
                 };
@@ -256,6 +263,7 @@
                         contract: ["foo", "bar"],
                         args: argumentsOb,
                         failOnError: true,
+                        pairedArgs: true,
                         rules: {}
                     });
                 };
@@ -288,6 +296,7 @@
                     contract: ["foo", "bar"],
                     args: ["bar", "pear"],
                     failOnError: true,
+                    pairedArgs: true,
                     rules: {}
                 });
                 return inputObj;
@@ -303,6 +312,7 @@
                 var inputObj = Sift({
                     contract: ["foo", "bar"],
                     args:  arguments,
+                    pairedArgs: true,
                     failOnError: true,
                     rules: {}
                 });
@@ -322,6 +332,7 @@
                     contract: ["foo", "bar"],
                     args: ["foo", "apple", "bar", "pear"],
                     failOnError: true,
+                    pairedArgs: true,
                     rules: {}
                 };
         });
@@ -757,9 +768,9 @@
             SiftObjectWithOutFailOnError = {
                     contract: ["foo", "bar"],
                     args: ["foo", "apple", "bar", "pear"],
+                    pairedArgs : true,
                     rules: {}
                 };
-
         });
 
         it("Sift.failOnError property does not have to be defined", function() {
@@ -790,6 +801,7 @@
 
             beforeEach(function() {
                 SiftObjectWithOutFailOnError.failOnError  =  false;
+                SiftObjectWithOutFailOnError.pairedArgs  =  true;
                 exampleSiftObj = SiftObjectWithOutFailOnError;
             });
 
@@ -930,19 +942,21 @@
             );
 
         });
+
         it("Passing a config 'fnConfig' and a function 'fn' to Sift should return a function whose parameters will " +
         "be evaluated against 'fnConfig'", function() {
 
-            var cool = function (name, email){
-                return name + email;
+            var cool = function (obj){
+                return obj.name + " can't be reached at " +  obj.email;
             };
-              var fnConfig = {
-                  contract: ["name", "email"],
-                  failOnError: true,
-                  rules: {
-                      required: ["name", "email"]
-                  }
-              };
+
+            var fnConfig = {
+              contract: ["name", "email"],
+              failOnError: true,
+              rules: {
+                  required: ["name", "email"]
+              }
+            };
 
             var fn = Sift(fnConfig, cool);
 
@@ -956,9 +970,10 @@
 
         it("Siftified functions take json object of parameter name/value pairs", function() {
 
-            var cool = function (name, email){
-                return name + email;
+            var cool = function (obj){
+                return obj.name + " can't be reached at " +  obj.email;
             };
+
             var fn = Sift({
                 contract: ["name", "email"],
                 failOnError: true,
@@ -973,14 +988,20 @@
             );
 
             expect(function(){ fn({"name":"Russell", "email":"cool@gmail.com"}); } ).not.toThrow();
+
+            expect(function(){
+                return fn({"name":"Russell", "email":"notreallyrussell@gmail.com"});
+            }.bind(this)()).toEqual("Russell can't be reached at notreallyrussell@gmail.com");
+
         });
 
 
         it("Siftified functions take array of name/value pairs", function() {
 
-            var cool = function (name, email){
-                return name + email;
+            var cool = function (obj){
+                return obj.name + " can't be reached at " +  obj.email;
             };
+
             var fn = Sift({
                 contract: ["name", "email"],
                 failOnError: true,
@@ -1002,8 +1023,8 @@
 
         it("Siftified functions take argument object", function() {
 
-            var cool = function (name, email){
-                return name + email;
+            var cool = function (obj){
+                return obj.name + " can't be reached at " +  obj.email;
             };
 
             var fn = Sift({
