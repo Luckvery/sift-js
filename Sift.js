@@ -1,47 +1,79 @@
-  var Sift = function(config) {
+var _ = require('lodash');
 
-    var _ = require('lodash');
+var SiftUtil = {
+    getOnlyOddIndexes: function (args) {
+        return _.transform(args, function (result, item, index) {
+            if (index % 2 !== 0 && !_.isUndefined(item)) {
+                result.push(item);
+            }
+        });
+    },
+    processCollection: function (config, collection) {
+        var result = true;
+        _.each(collection, function (thing) {
+            config.args = thing;
+            var thingResult = Sift(config);
+            if(_.isBoolean(thingResult) && _.isEqual(thingResult, false)) result = false;
+        });
+
+        return result;
+    },
+    applyMapValues : function(map, key, value) {
+        return (_.contains(_.keys(map), key) && _.has(map[key], value)) ? map[key][value] : value;
+    },
+    setDefaultsOrEmptyValues : function(config) {
+        return _.reduce(
+            config.contract,
+            function(result, argument) {
+                result[argument] = _.isUndefined(result[argument]) ?  "" : result[argument];
+                return result;
+            },
+            _.isEmpty(config.rules.defaults) ? {}: config.rules.defaults
+        )
+    },
+    mapContractToValues : function(contract, arg){
+        return _.transform(contract, function (result, item, index) {
+            if(!_.isEmpty(arg[index])) {
+                result.push(item);
+                result.push(arg[index]);
+            }
+        });
+    },
+    normalizeForUnPairedArguments : function(config) {
+        args = _.flatten(config.args);
+        return config.pairedArgs ? args : this.mapContractToValues(config.contract, args);
+    },
+    normalizeForParamValuePairObject : function (config) {
+        return _.flatten(_.pairs(config.args));
+    }
+};
+
+var Sift = function(config) {
+
     var resultObj = {};
-    var regex = {};
     var throwError = function(msg){
          throw new Error(msg);
     };
     var createResultObj = function() {
-        var map = config.rules.map;
         var argPos;
-        var argObj
+        var argObj;
 
-        var applyMapValues = function(key, value) {
-            return (_.contains(_.keys(map), key) && _.has(map[key], value)) ? map[key][value] : value;
-        }
-
-        var setDefaultsOrEmptyValues = function() {
-            return _.reduce(
-                    config.contract,
-                    function(result, argument) {
-                        result[argument] = _.isUndefined(result[argument]) ?  "" : result[argument];
-                        return result;
-                    },
-                    _.isEmpty(config.rules.defaults) ? {}: config.rules.defaults
-            )
-
-        }
-        argObj = setDefaultsOrEmptyValues();
+        argObj = SiftUtil.setDefaultsOrEmptyValues(config);
 
         _(argObj).forEach(function(value, arg) {
 
             argPos = _.indexOf(config.args, arg);
             if (!!~argPos) {
-                argObj[arg] = applyMapValues(arg, config.args[argPos + 1]);
+                argObj[arg] = SiftUtil.applyMapValues(config.rules.map, arg, config.args[argPos + 1]);
             }  else if (!_.isEmpty(argObj[arg])){
-                argObj[arg] = applyMapValues(arg, argObj[arg]);
+                argObj[arg] = SiftUtil.applyMapValues(config.rules.map, arg, argObj[arg]);
             }
 
         });
 
         resultObj = argObj;
-        return true
-    }
+        return true;
+    };
 
     var siftValidationObj = {
         validationRule: {
@@ -72,29 +104,11 @@
                     return config.failOnError ? throwError('Sift violation: Argument list must be an array, argument object or object literal of argument name/value pairs') : false;
                 }
 
-                var mapContractToValues = function(arg){
-                    return _.transform(config.contract, function (result, item, index) {
-                        if(!_.isEmpty(arg[index])) {
-                            result.push(item);
-                            result.push(arg[index]);
-                        }
-                    });
-                };
-
-                var normalizeForUnPairedArguments = function (args) {
-                    args = _.flatten(args);
-                    return config.pairedArgs ? args : mapContractToValues(args);
-                };
-
-                var normalizeForParamValuePairObject = function (args) {
-                    return _.flatten(_.pairs(args));
-                };
-
                 //normalize arguments
                 config.args = _.transform(
                     _.isPlainObject(config.args)
-                        ? normalizeForParamValuePairObject(config.args)
-                        : normalizeForUnPairedArguments(config.args)
+                        ? SiftUtil.normalizeForParamValuePairObject(config)
+                        : SiftUtil.normalizeForUnPairedArguments(config)
                     ,
                     function(result, val, key) {
                         result[key] = _.isUndefined(val) ? "" : val;
@@ -383,7 +397,7 @@
         return false;
     }
 
-    return resultObj
+    return resultObj;
 };
 
 
@@ -396,13 +410,7 @@
 }(this, function(_){
     return function siftifiedFunction (config, thingy) {
 
-        var getOnlyOddIndexes = function (args) {
-            return _.transform(args, function (result, item, index) {
-                if(index % 2 !== 0 && !_.isUndefined(item) ) {
-                    result.push(item);
-                }
-            });
-        };
+
 
         if(_.isFunction(thingy)) {
             return function () {
@@ -411,19 +419,15 @@
                 return thingy.apply(
                     this,
                     config.pairedArgs
-                        ? getOnlyOddIndexes(_.flatten(arguments))
+                        ? SiftUtil.getOnlyOddIndexes(_.flatten(arguments))
                         : arguments
                 );
             };
         }
 
         if(_.isArray(thingy)) {
-            _.each(thingy, function (thing) {
-                    config.args = thing;
-                    Sift(config);
-                }
-            );
-            return thingy;
+            var result = SiftUtil.processCollection(config, thingy);
+            return !result ? result :  thingy;
         }
 
         if(!_.isUndefined(thingy)) {
