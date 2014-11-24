@@ -1012,6 +1012,30 @@
             );
         });
 
+        it("Given a config 'fnConfig' and a collection 'col' Sift will throw an error if any object in collection " +
+            "fails to be validation when evaluated against 'fnConfig'", function() {
+
+            var col = [
+                {"name":"Russell", "email":"russell@gmail.com"},
+                {"name":"David", "email":"david@gmail.com"},
+                {"name":"Paul", "email":"paul@gmail.com"},
+                {"name":"Shawn"},
+                {"name":"Fred", "email":"fred@gmail.com"},
+                {"name":"Dennis", "email":"dennis@gmail.com"},
+                {"name":"Andrew", "email":"andrew@gmail.com"}
+            ];
+
+            var fnConfig = {
+              contract: ["name", "email"],
+              failOnError: false,  // :)
+              rules: {
+                  required: ["name", "email"]
+              }
+            };
+
+            expect(Sift(fnConfig, col)).toBe(false);
+        });
+
         it("Given a config 'fnConfig' and a collection 'col' Sift will return the collection if all objects " +
             "in collection evaluated against 'fnConfig' are valid", function() {
 
