@@ -352,7 +352,6 @@
 
         });
 
-
         describe("Testing Sift Object\'s Rules.exclusive Property", function() {
             it("If present Rules.exclusive property should be an array", function() {
                 SiftObjectWithOutRules.rules.exclusive  = "";
@@ -587,6 +586,7 @@
                 );
             });
         });
+
         describe("Testing Sift Object\'s Rules.collections Property", function() {
 
             it("Rules.collections property passes when it should", function () {
@@ -631,6 +631,7 @@
                 expect(assertAllObjectsInOriginalCollectionAreReturnedBySift(resultObj.users)).toBe(true);
 
             });
+
             it("Rules.collections property fail when it should", function () {
                 var resultObj;
                 var usersCollection = [
@@ -674,7 +675,166 @@
                 mainConfig.rules.collections.users = collectionConfigWithFailOnError;
                 expect(function(){ Sift(mainConfig);}).toThrow(
                     new Error(
+                        '\nFailing Collection Item:\n'+
+                        '{"name":"Shawn"}'+
+                        '\nCollection Failure!!\n'+
                         'Sift.rules.required violation: 1 or more required argument(s) missing. Required argument(s): name,email'
+                    )
+                );
+
+            });
+
+            it("Rules.collections property fail when it should", function () {
+                var resultObj;
+                var usersCollection = [
+                    {"name": "Russell", "email": "russell@gmail.com"},
+                    {"name": "David", "email": "david@gmail.com"},
+                    {"name": "Paul", "email": "paul@gmail.com"},
+                    ,
+                    {"name": "Fred", "email": "fred@gmail.com"},
+                    {"name": "Dennis", "email": "dennis@gmail.com"},
+                    {"name": "Andrew", "email": "andrew@gmail.com"}
+                ];
+
+                var collectionConfigWithFailOnError = {
+                    contract: ["name", "email"],
+                    failOnError: true,
+                    rules: {
+                        required: ["name", "email"]
+                    }
+                };
+                var collectionConfigWithoutFailOnError = {
+                    contract: ["name", "email"],
+                    failOnError: false,
+                    rules: {
+                        required: ["name", "email"]
+                    }
+                };
+                var mainConfig = {
+                    contract: ["foo", "bar", "users"],
+                    args: ["foo", "apple", "bar", "pear", "users", usersCollection],
+                    pairedArgs: true,
+                    rules: {
+                        collections: {
+                            "users": collectionConfigWithoutFailOnError
+                        }
+                    }
+                };
+
+                resultObj = Sift(mainConfig);
+                expect(resultObj).toBe(false);
+
+                mainConfig.rules.collections.users = collectionConfigWithFailOnError;
+                expect(function(){ Sift(mainConfig);}).toThrow(
+                    new Error(
+                        '\nFailing Collection Item:\n'+
+                        'undefined'+
+                        '\nCollection Failure!!\n'+
+                        'Sift violation: Argument list must be an array, argument object or object literal of argument name/value pairs'
+                    )
+                );
+
+            });
+
+            it("Rules.collections property fail when it should", function () {
+                var resultObj;
+                var usersCollection = [
+                    {"name": "Russell", "email": "russell@gmail.com"},
+                    {"name": "David", "email": "david@gmail.com"},
+                    {"name": "Paul", "email": "paul@gmail.com"},
+                    null,
+                    {"name": "Fred", "email": "fred@gmail.com"},
+                    {"name": "Dennis", "email": "dennis@gmail.com"},
+                    {"name": "Andrew", "email": "andrew@gmail.com"}
+                ];
+
+                var collectionConfigWithFailOnError = {
+                    contract: ["name", "email"],
+                    failOnError: true,
+                    rules: {
+                        required: ["name", "email"]
+                    }
+                };
+                var collectionConfigWithoutFailOnError = {
+                    contract: ["name", "email"],
+                    failOnError: false,
+                    rules: {
+                        required: ["name", "email"]
+                    }
+                };
+                var mainConfig = {
+                    contract: ["foo", "bar", "users"],
+                    args: ["foo", "apple", "bar", "pear", "users", usersCollection],
+                    pairedArgs: true,
+                    rules: {
+                        collections: {
+                            "users": collectionConfigWithoutFailOnError
+                        }
+                    }
+                };
+
+                resultObj = Sift(mainConfig);
+                expect(resultObj).toBe(false);
+
+                mainConfig.rules.collections.users = collectionConfigWithFailOnError;
+                expect(function(){ Sift(mainConfig);}).toThrow(
+                    new Error(
+                        '\nFailing Collection Item:\n'+
+                        'null'+
+                        '\nCollection Failure!!\n'+
+                        'Sift violation: Argument list must be an array, argument object or object literal of argument name/value pairs'
+                    )
+                );
+
+            });
+
+            it("Rules.collections property fail when it should", function () {
+                var resultObj;
+                var usersCollection = [
+                    {"name": "Russell", "email": "russell@gmail.com"},
+                    {"name": "David", "email": "david@gmail.com"},
+                    {"name": "Paul", "email": "paul@gmail.com"},
+                    "",
+                    {"name": "Fred", "email": "fred@gmail.com"},
+                    {"name": "Dennis", "email": "dennis@gmail.com"},
+                    {"name": "Andrew", "email": "andrew@gmail.com"}
+                ];
+
+                var collectionConfigWithFailOnError = {
+                    contract: ["name", "email"],
+                    failOnError: true,
+                    rules: {
+                        required: ["name", "email"]
+                    }
+                };
+                var collectionConfigWithoutFailOnError = {
+                    contract: ["name", "email"],
+                    failOnError: false,
+                    rules: {
+                        required: ["name", "email"]
+                    }
+                };
+                var mainConfig = {
+                    contract: ["foo", "bar", "users"],
+                    args: ["foo", "apple", "bar", "pear", "users", usersCollection],
+                    pairedArgs: true,
+                    rules: {
+                        collections: {
+                            "users": collectionConfigWithoutFailOnError
+                        }
+                    }
+                };
+
+                resultObj = Sift(mainConfig);
+                expect(resultObj).toBe(false);
+
+                mainConfig.rules.collections.users = collectionConfigWithFailOnError;
+                expect(function(){ Sift(mainConfig);}).toThrow(
+                    new Error(
+                        '\nFailing Collection Item:\n'+
+                        '""'+
+                        '\nCollection Failure!!\n'+
+                        'Sift violation: Argument list must be an array, argument object or object literal of argument name/value pairs'
                     )
                 );
 
@@ -1098,7 +1258,12 @@
             };
 
             expect(function(){ Sift(fnConfig, col);} ).toThrow(
-                new Error('Sift.rules.required violation: 1 or more required argument(s) missing. Required argument(s): name,email')
+                new Error(
+                    '\nFailing Collection Item:\n'+
+                    '{"name":"Shawn"}'+
+                    '\nCollection Failure!!\n'+
+                    'Sift.rules.required violation: 1 or more required argument(s) missing. Required argument(s): name,email'
+                )
             );
         });
 
