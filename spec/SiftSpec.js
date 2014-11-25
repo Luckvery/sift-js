@@ -631,7 +631,7 @@
                 expect(assertAllObjectsInOriginalCollectionAreReturnedBySift(resultObj.users)).toBe(true);
 
             });
-            iit("Rules.collections property fail when it should", function () {
+            it("Rules.collections property fail when it should", function () {
                 var resultObj;
                 var usersCollection = [
                     {"name": "Russell", "email": "russell@gmail.com"},
