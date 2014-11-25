@@ -589,6 +589,43 @@
 
         describe("Testing Sift Object\'s Rules.collections Property", function() {
 
+            describe("Testing Rules Property format", function() {
+                var mainConfigWithEmptyCollectionObj;
+                var usersCollection;
+
+                beforeEach(function() {
+                    usersCollection = [
+                        {"name": "Russell", "email": "russell@gmail.com"},
+                        {"name": "David", "email": "david@gmail.com"},
+                        {"name": "Paul", "email": "paul@gmail.com"}
+                    ];
+                    mainConfigWithEmptyCollectionObj = {
+                        contract: ["foo", "bar", "users"],
+                        args: ["foo", "apple", "bar", "pear", "users", usersCollection],
+                        pairedArgs: true,
+                        failOnError: true,
+                        rules: {
+                            collections: {
+                                "users" : usersCollection
+                            }
+                        }
+                    };
+                });
+
+                it("Rules.collections property should be an object", function() {
+                    expect(function(){ Sift(mainConfigWithEmptyCollectionObj);}).not.toThrow();
+                    var mainConfigWithBadCollectionObj = mainConfigWithEmptyCollectionObj.rules.collections = "";
+                    expect(function(){ Sift(mainConfigWithBadCollectionObj);}).toThrow();
+                });
+
+                it("Rules.collections sub-properties should be of type array", function () {
+                    expect(function(){ Sift(mainConfigWithEmptyCollectionObj);}).not.toThrow();
+                    var mainConfigWithBadCollectionSubProp = mainConfigWithEmptyCollectionObj.rules.collections.users = "";
+                    expect(function(){ Sift(mainConfigWithBadCollectionSubProp);}).toThrow();
+                });
+
+            });
+
             it("Rules.collections property passes when it should", function () {
 
                 var usersCollection = [
