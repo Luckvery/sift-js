@@ -60,6 +60,7 @@ Declaratively perform validation on parameters in Sift's contract
 |    Name             | Description                                              |
 |:-------------------:|:--------------------------------------------------------:|
 |atLeastOne|At least one argument in contract must have a value|
+|collections|Map an argument that is a collection to a sift config which it will be evaluated against |
 |custom|Define custom validations with a callback function|
 |defaults|Set default values for arguments in this group that aren't present|
 |exclusive|Each argument in this group is mutually exclusive|
@@ -77,7 +78,7 @@ Declaratively perform validation on parameters in Sift's contract
  
  When present, Sift will return the function so you might assign it to a variable (for example). After which when this
  function is called, its arguments will be evaluated by Sift. In practice arguments should be key/value object where keys
- are parameter names and values are values for respective parameter names. However, although, less useful, it is also possible
+ are parameter names and values are values for respective parameter names. However, although less useful, it is also possible
  to pass an argument object or an array of alternating key, value pairs in the form, `["foo", "hello", "bar", "world"]`.
 
 #### <u>Collection of objects to be validated</u>
@@ -174,6 +175,23 @@ module.exports = function(grunt) {
 #### Contrived total usage
 ```
 fooBar(){
+     var colConfig = {
+         contract: ["name", "email"],
+         failOnError: true,
+         rules: {
+             required: ["name", "email"]
+         }
+     };
+
+     var col = [
+        {"name":"Russell", "email":"russell@gmail.com"},
+        {"name":"David", "email":"david@gmail.com"},
+        {"name":"Paul", "email":"paul@gmail.com"},
+        {"name":"Fred", "email":"fred@gmail.com"},
+        {"name":"Dennis", "email":"dennis@gmail.com"},
+        {"name":"Andrew", "email":"andrew@gmail.com"}
+     ];
+
      var inputObj = Sift({
         contract:["url", "named", "clientId", "reconcile", "shell", "config", "year"],
         args: this.args,
@@ -183,6 +201,9 @@ fooBar(){
                 exclusive: [
                     ["url", "named"]
                 ],
+                collection: {
+                    "users": colConfig
+                },
                 requires: {
                     "reconcile": ["clientId"]
                 },
