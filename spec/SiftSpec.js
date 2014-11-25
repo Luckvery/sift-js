@@ -587,6 +587,99 @@
                 );
             });
         });
+        describe("Testing Sift Object\'s Rules.collections Property", function() {
+
+            it("Rules.collections property passes when it should", function () {
+
+                var usersCollection = [
+                    {"name": "Russell", "email": "russell@gmail.com"},
+                    {"name": "David", "email": "david@gmail.com"},
+                    {"name": "Paul", "email": "paul@gmail.com"},
+                    {"name": "Shawn", "email": "shawn@gmail.com"},
+                    {"name": "Fred", "email": "fred@gmail.com"},
+                    {"name": "Dennis", "email": "dennis@gmail.com"},
+                    {"name": "Andrew", "email": "andrew@gmail.com"}
+                ];
+
+                var collectionConfig = {
+                    contract: ["name", "email"],
+                    failOnError: true,
+                    rules: {
+                        required: ["name", "email"]
+                    }
+                };
+                var mainConfig = {
+                    contract: ["foo", "bar", "users"],
+                    args: ["foo", "apple", "bar", "pear", "users", usersCollection],
+                    pairedArgs: true,
+                    rules: {
+                        collections: {
+                            "users": collectionConfig
+                        }
+                    }
+                };
+
+                var assertAllObjectsInOriginalCollectionAreReturnedBySift = function (collection) {
+                    return _.every(collection, function (obj) {
+                        return !_.isEmpty(_.where(usersCollection, obj));
+                    }.bind(this));
+                };
+
+                var resultObj = Sift(mainConfig);
+                expect(resultObj.foo).toBe("apple");
+                expect(resultObj.bar).toBe("pear");
+                expect(assertAllObjectsInOriginalCollectionAreReturnedBySift(resultObj.users)).toBe(true);
+
+            });
+            iit("Rules.collections property fail when it should", function () {
+                var resultObj;
+                var usersCollection = [
+                    {"name": "Russell", "email": "russell@gmail.com"},
+                    {"name": "David", "email": "david@gmail.com"},
+                    {"name": "Paul", "email": "paul@gmail.com"},
+                    {"name": "Shawn"},
+                    {"name": "Fred", "email": "fred@gmail.com"},
+                    {"name": "Dennis", "email": "dennis@gmail.com"},
+                    {"name": "Andrew", "email": "andrew@gmail.com"}
+                ];
+
+                var collectionConfigWithFailOnError = {
+                    contract: ["name", "email"],
+                    failOnError: true,
+                    rules: {
+                        required: ["name", "email"]
+                    }
+                };
+                var collectionConfigWithoutFailOnError = {
+                    contract: ["name", "email"],
+                    failOnError: false,
+                    rules: {
+                        required: ["name", "email"]
+                    }
+                };
+                var mainConfig = {
+                    contract: ["foo", "bar", "users"],
+                    args: ["foo", "apple", "bar", "pear", "users", usersCollection],
+                    pairedArgs: true,
+                    rules: {
+                        collections: {
+                            "users": collectionConfigWithoutFailOnError
+                        }
+                    }
+                };
+
+                resultObj = Sift(mainConfig);
+                expect(resultObj).toBe(false);
+
+                mainConfig.rules.collections.users = collectionConfigWithFailOnError;
+                expect(function(){ Sift(mainConfig);}).toThrow(
+                    new Error(
+                        'Sift.rules.required violation: 1 or more required argument(s) missing. Required argument(s): name,email'
+                    )
+                );
+
+            });
+        });
 
         describe("Testing Sift Object\'s Rules.defaults Property", function() {
 
@@ -598,11 +691,9 @@
             });
 
             it("Param in Rules.defaults property is applied when param is not present in args array", function() {
-                var obviousFunction = function(thing){ return "A pear is green";};
 
-                SiftObjectWithOutRules.args      = ["truck", "rough"];
-                SiftObjectWithOutRules.contract  = ["truck", "car"];
-
+                SiftObjectWithOutRules.args            = ["truck", "rough"];
+                SiftObjectWithOutRules.contract        = ["truck", "car"];
                 SiftObjectWithOutRules.rules.defaults  = {
                     "car": "dogg"
                 };
@@ -850,7 +941,6 @@
             });
 
             it("Sift.rules.custom: Parameters will be evaluated against function passed to sub key representing parameter", function() {
-
                 exampleSiftObj.rules.custom  =
                 {
                    "foo":function(value){
@@ -984,7 +1074,7 @@
 
     });
 
-    describe("Testing Sift Collections", function() {
+    describe("Testing Siftified Collections", function() {
 
         it("Given a config 'fnConfig' and a collection 'col' Sift will throw an error if any object in collection " +
             "fails to be validation when evaluated against 'fnConfig'", function() {
@@ -1057,18 +1147,24 @@
               }
             };
 
-            var assetAllObjectsInOriginalCollectionAreReturnedBySift = function () {
+            var assertAllObjectsInOriginalCollectionAreReturnedBySift = function () {
                 return _.every(Sift(fnConfig, col), function (obj) {
                     return !_.isEmpty(_.where(col, obj));
                 }.bind(this));
             };
 
-            expect(assetAllObjectsInOriginalCollectionAreReturnedBySift()).toBe(true);
+            expect(assertAllObjectsInOriginalCollectionAreReturnedBySift()).toBe(true);
         });
-
     });
+//        var fnConfig = {
+//            contract: ["name", "email"],
+//            failOnError: true,
+//            rules: {
+//                required: ["name", "email"]
+//            }
+//        };
 
-    // var inputObj = Sift({
+//         var inputObj = Sift({
 //         contract:["url", "named", "butler", "reconcile", "shell", "config", "year"],
 //         args: this.args,
 //         failOnError: true,
@@ -1077,6 +1173,9 @@
 //                 exclusive: [
 //                     ["url", "named"]
 //                 ],
+//                 collections: {
+//                     "users": fnConfig
+//                 },
 //                 requires: {
 //                     "reconcile": ["butler"]
 //                 },

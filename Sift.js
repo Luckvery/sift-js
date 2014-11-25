@@ -1,6 +1,9 @@
 var _ = require('lodash');
 
-var SiftUtil = {
+var SiftUtils = {
+    throwError : function(msg){
+        throw new Error(msg);
+    },
     getOnlyOddIndexes: function (args) {
         return _.transform(args, function (result, item, index) {
             if (index % 2 !== 0 && !_.isUndefined(item)) {
@@ -8,14 +11,31 @@ var SiftUtil = {
             }
         });
     },
-    processCollection: function (config, collection) {
+    processSiftifiedCollection: function (config, collection) {
         var result = true;
         _.each(collection, function (thing) {
             config.args = thing;
             var thingResult = Sift(config);
             if(_.isBoolean(thingResult) && _.isEqual(thingResult, false)) result = false;
         });
-
+        return result;
+    },
+    paramPresent : function (formatedArgs, key) {
+        return !!~_.indexOf(formatedArgs, key);
+    },
+    paramValuePresent : function (formatedArgs, key) {
+        return !_.isEmpty(formatedArgs[_.indexOf(formatedArgs, key) + 1]);
+    },
+    paramValue : function (formatedArgs, key) {
+        return formatedArgs[_.indexOf(formatedArgs, key) + 1];
+    },
+    processRulesCollections : function(mainConfig) {
+        var result = true;
+        _.each(mainConfig.rules.collections, function (formatedArgs, config, key) {
+            if (result && this.paramPresent(formatedArgs, key) && this.paramValuePresent(formatedArgs, key)) {
+              result = this.processSiftifiedCollection(config, this.paramValue(formatedArgs, key));
+            }
+        }.bind(this, this.normalizeForUnPairedArguments(mainConfig)));
         return result;
     },
     applyMapValues : function(map, key, value) {
@@ -31,57 +51,65 @@ var SiftUtil = {
             _.isEmpty(config.rules.defaults) ? {}: config.rules.defaults
         )
     },
-    mapContractToValues : function(contract, arg){
-        return _.transform(contract, function (result, item, index) {
-            if(!_.isEmpty(arg[index])) {
+    mapContractToValues : function(contract, args){
+        args = this.normalizeForParamValuePairArray(contract,args);
+        var result = [];
+        _.each(contract, function (item) {
+            if(this.paramPresent(args, item)) {
                 result.push(item);
-                result.push(arg[index]);
+                result.push(this.paramValue(args, item));
             }
-        });
+        }.bind(this));
+        return result;
     },
     normalizeForUnPairedArguments : function(config) {
-        args = _.flatten(config.args);
+        args = _.isArguments(config.args) ? Array.prototype.slice.call(config.args) : config.args;
         return config.pairedArgs ? args : this.mapContractToValues(config.contract, args);
     },
+    normalizeForParamValuePairArray : function (contract, args) {
+        var result = [];
+        _.each(contract, function (param, index) {
+            if(!_.isEmpty(args[index])) {
+                result.push(param);
+                result.push(args[index]);
+            }
+        });
+        return result;
+    },
     normalizeForParamValuePairObject : function (config) {
-        return _.flatten(_.pairs(config.args));
+        var result = [];
+        _.each(config.args, function (val, param) {
+            result.push(param);
+            result.push(val);
+        });
+        return result;
+    },
+    createResultObj : function(config) {
+        var argObj = this.setDefaultsOrEmptyValues(config);
+        _(argObj).forEach(function(value, arg) {
+            var argPos = _.indexOf(config.args, arg);
+            if (!!~argPos) {
+                argObj[arg] = this.applyMapValues(config.rules.map, arg, config.args[argPos + 1]);
+            }  else if (!_.isEmpty(argObj[arg])){
+                argObj[arg] = this.applyMapValues(config.rules.map, arg, argObj[arg]);
+            }
+        }.bind(this));
+        return argObj;
     }
 };
 
 var Sift = function(config) {
-
-    var resultObj = {};
-    var throwError = function(msg){
-         throw new Error(msg);
-    };
-    var createResultObj = function() {
-        var argPos;
-        var argObj;
-
-        argObj = SiftUtil.setDefaultsOrEmptyValues(config);
-
-        _(argObj).forEach(function(value, arg) {
-
-            argPos = _.indexOf(config.args, arg);
-            if (!!~argPos) {
-                argObj[arg] = SiftUtil.applyMapValues(config.rules.map, arg, config.args[argPos + 1]);
-            }  else if (!_.isEmpty(argObj[arg])){
-                argObj[arg] = SiftUtil.applyMapValues(config.rules.map, arg, argObj[arg]);
-            }
-
-        });
-
-        resultObj = argObj;
-        return true;
-    };
-
     var siftValidationObj = {
         validationRule: {
             contract: function() {
                 if (!_.isArray(config.contract)) {
-                    return config.failOnError ? throwError('Sift violation: Contract must be an array') : false;
+                    return config.failOnError
+                        ? SiftUtils.throwError('Sift violation: Contract must be an array')
+                        : false;
                 } else if (config.contract.length <= 0) {
-                    return config.failOnError ? throwError('Sift violation: Contract must contain at least 1 property') : false;
+                    return config.failOnError
+                        ? SiftUtils.throwError('Sift violation: Contract must contain at least 1 property')
+                        : false;
                 }
                 return true;
             },
@@ -89,26 +117,36 @@ var Sift = function(config) {
                 if(_.isUndefined(config.failOnError)){
                     config.failOnError = false;
                 } else if (!_.isBoolean(config.failOnError)) {
-                    return throwError('Sift violation: ' + (config.failOnError == "" ? "''" : config.failOnError) +' not a valid value. If defined failOnError must be a boolean');
+                    return SiftUtils.throwError(
+                        'Sift violation: ' +
+                        (config.failOnError == "" ? "''" : config.failOnError) +
+                        ' not a valid value. If defined failOnError must be a boolean'
+                    );
                 }
                 return true;
             },
             rules: function() {
                 if (!_.isPlainObject(config.rules)) {
-                    return config.failOnError ? throwError('Sift violation: Rules must be Object Literal') : false;
+                    return config.failOnError
+                        ? SiftUtils.throwError('Sift violation: Rules must be Object Literal')
+                        : false;
                 }
                 return true;
             },
             args: function() {
                 if (!_.isArguments(config.args) && !_.isArray(config.args) && !_.isPlainObject(config.args) ) {
-                    return config.failOnError ? throwError('Sift violation: Argument list must be an array, argument object or object literal of argument name/value pairs') : false;
+                    return config.failOnError
+                        ? SiftUtils.throwError(
+                            'Sift violation: Argument list must be an array, argument object or object literal ' +
+                            'of argument name/value pairs'
+                          )
+                        : false;
                 }
-
                 //normalize arguments
                 config.args = _.transform(
                     _.isPlainObject(config.args)
-                        ? SiftUtil.normalizeForParamValuePairObject(config)
-                        : SiftUtil.normalizeForUnPairedArguments(config)
+                        ? SiftUtils.normalizeForParamValuePairObject(config)
+                        : SiftUtils.normalizeForUnPairedArguments(config)
                     ,
                     function(result, val, key) {
                         result[key] = _.isUndefined(val) ? "" : val;
@@ -116,13 +154,23 @@ var Sift = function(config) {
                 );
 
                 if (config.args.length % 2) {
-                    return config.failOnError ? throwError("Sift violation: Bad argument count, missing value of one argument in set: [" + config.contract + "]") : false;
+                    return config.failOnError
+                        ? SiftUtils.throwError(
+                            "Sift violation: Bad argument count, " +
+                            "missing value of one argument in set: [" + config.contract + "]"
+                          )
+                        : false;
                 }
 
                 var j = 0;
                 _(config.args).forEach(function(arg) {
                     if ((j % 2 === 0) && !_.contains(config.contract, arg)) {
-                        return config.failOnError ? throwError("Sift violation: Argument \"" + arg + "\" is not valid: valid argument(s): [" + config.contract + "]") : false;
+                        return config.failOnError
+                            ? SiftUtils.throwError(
+                                "Sift violation: Argument \"" + arg + "\" is not valid: valid argument(s): ["
+                                + config.contract + "]"
+                              )
+                            : false;
                     }
                     j++;
                 });
@@ -160,9 +208,12 @@ var Sift = function(config) {
         },
         typeValidForRule :   function(rulesObj, rule){
             if(_.has( rulesObj, rule) && !this.checkMap[rule].check(rulesObj[rule])){
-                    return config.failOnError
-                        ? throwError("Sift.rules." + rule + " violation: If present Rules."+ rule + " property should be " + this.checkMap[rule].shouldBe)
-                        : false;
+                return config.failOnError
+                    ? SiftUtils.throwError(
+                        "Sift.rules." + rule + " violation: If present Rules." + rule
+                        + " property should be " + this.checkMap[rule].shouldBe
+                      )
+                    : false;
             }
             return true;
         }
@@ -176,9 +227,13 @@ var Sift = function(config) {
                 _(config.rules.custom).forEach(function(cb, arg) {
                     if (_.contains(config.args, arg) && !cb(parsedObj[arg])) {
                         customValidationFalure = true;
-                        return config.failOnError ? throwError("Sift.rules.custom violation: Custom validation for " + arg + " failed.") : false;
+                        return config.failOnError
+                            ? SiftUtils.throwError(
+                                "Sift.rules.custom violation: Custom validation for " + arg + " failed."
+                              )
+                            : false;
                     }
-                });
+                }.bind(this));
                 return !customValidationFalure;
             }
         },
@@ -193,7 +248,12 @@ var Sift = function(config) {
                         }
                     });
                     if (count == 0) {
-                        return config.failOnError ? throwError("Sift.rules.atLeastOne violation: At least one argument is required: [" + config.contract + "]") : false;
+                        return config.failOnError
+                            ? SiftUtils.throwError(
+                                "Sift.rules.atLeastOne violation: At least one argument is required: [" +
+                                config.contract + "]"
+                              )
+                            : false;
                     }
                 }
                 return true;
@@ -221,7 +281,10 @@ var Sift = function(config) {
                             }
                         });
                         if (count > 1) {
-                             config.failOnError && throwError("Sift.rules.exclusive violation: Only 1 argument is allowed in this group: " + groupArray);
+                             config.failOnError && SiftUtils.throwError(
+                                 "Sift.rules.exclusive violation: Only 1 argument is allowed in this group: " +
+                                 groupArray
+                             );
                              result = false;
                         }
                     }
@@ -230,9 +293,7 @@ var Sift = function(config) {
             },
             map: function() {
                 if(!ruleTypeCheckMap.typeValidForRule(config.rules, "map")) return false;
-
                 map = config.rules.map;
-
                 return true;
             },
             only: function() {
@@ -249,7 +310,10 @@ var Sift = function(config) {
                             ) + 1
                         ];
                         if (_.contains(config.args, arg) && !_.contains(validValues, valueOfArg)){
-                           config.failOnError && throwError("Sift.rules.only violation: "+ valueOfArg +" is not valid value for " + arg  +". Valid values for " + arg + " are: [ " + validValues + " ]");
+                           config.failOnError && SiftUtils.throwError(
+                               "Sift.rules.only violation: "+ valueOfArg +" is not valid value for "
+                               + arg  +". Valid values for " + arg + " are: [ " + validValues + " ]"
+                           );
                            result = false;
                         }
                     });
@@ -265,7 +329,12 @@ var Sift = function(config) {
                     }
                 });
                 if (count != 0 && count != config.rules.oneForAll.length) {
-                    return config.failOnError ? throwError("Sift.rules.oneForAll violation: If 1 argument in this group is specified, they all must be specified: " + config.rules.oneForAll) : false;
+                    return config.failOnError
+                        ? SiftUtils.throwError(
+                            "Sift.rules.oneForAll violation: If 1 argument in this group is specified, " +
+                            "they all must be specified: " + config.rules.oneForAll
+                          )
+                        : false;
                 }
                 return true;
             },
@@ -274,7 +343,10 @@ var Sift = function(config) {
                 if(!ruleTypeCheckMap.typeValidForRule(config.rules, "required")) return !result;
                 _(config.rules.required).forEach(function(arg) {
                     if (result && !_.contains(config.args, arg)){
-                        config.failOnError && throwError("Sift.rules.required violation: 1 or more required argument(s) missing. Required argument(s): " + config.rules.required);
+                        config.failOnError && SiftUtils.throwError(
+                            "Sift.rules.required violation: 1 or more required argument(s) missing. " +
+                            "Required argument(s): " + config.rules.required
+                        );
                         result = false;
                     }
                 });
@@ -286,7 +358,10 @@ var Sift = function(config) {
                 _(config.rules.requires).forEach(function(arrOfRequired, dependantArg){
                     result && _(arrOfRequired).forEach(function(requiredArgument) {
                         if (_.contains(config.args, dependantArg)&& !_.contains(config.args, requiredArgument) ){
-                            config.failOnError && throwError("Sift.rules.requires violation: If " + dependantArg + " exists as an argument, then " + requiredArgument + " must be present as an argument")
+                            config.failOnError && SiftUtils.throwError(
+                                "Sift.rules.requires violation: If " + dependantArg + " exists as an argument, then " +
+                                requiredArgument + " must be present as an argument"
+                            )
                             result = false;
                         }
                     });
@@ -316,10 +391,17 @@ var Sift = function(config) {
                         var argValue;
                         _(types).forEach(function(type) {
                             if (!_.has(typesObj, type.toLowerCase())) {
-                                return config.failOnError ? throwError("Sift.rules.type violation: " + type + " is an invalid type. Available types: " + _.keys(typesObj).join(", ")) : false;
+                                return config.failOnError
+                                    ? SiftUtils.throwError(
+                                        "Sift.rules.type violation: " + type +
+                                        " is an invalid type. Available types: " + _.keys(typesObj).join(", ")
+                                      )
+                                    : false;
                             }
                             if (_.contains(config.args, argName)) {
-                                argValue = config.args[_.findIndex(config.args, function(targetArg) {return targetArg == argName}) + 1];
+                                argValue = config.args[
+                                    _.findIndex(config.args, function(targetArg) {return targetArg == argName}) + 1
+                                ];
                                 if (typesObj[type.toLowerCase()](argValue)) {
                                     resultsCollection.push({
                                         valid: true
@@ -334,70 +416,60 @@ var Sift = function(config) {
                         });
 
                         if (!_.isEmpty(resultsCollection) && !_.some(resultsCollection, 'valid')) {
-
-                            var error = _.first(resultsCollection, function(resultObj) {
-                                return !resultObj.valid;
+                            var error = _.first(resultsCollection, function(errorObj) {
+                                return !errorObj.valid;
                             })[0].msg
 
-                             config.failOnError && throwError("Sift.rules.type violation: " + error + " Expected " + (types.length > 1 ? "types" : "type") + ": [" + types.join(", ") + "]");
-
-                             result =  false;
+                            config.failOnError && SiftUtils.throwError(
+                                "Sift.rules.type violation: " + error + " Expected " +
+                                (types.length > 1 ? "types" : "type") + ": [" + types.join(", ") + "]"
+                            );
+                            result =  false;
                         }
                     }
-
                 });
 
                 return result;
-
             }
         },
         valid: function() {
-            var that = this;
-            return (function() {
-                var valid = true;
-                if (!_.isEmpty(config.rules)) {
-                    _.forEach(that.validationRule, function(validation, rule) {
-                        if (valid && _.has(config.rules, rule)) {
-                            if (!validation()) {
-                                valid = false;
-                                return false;
-                            }
+            var valid = true;
+            if (!_.isEmpty(config.rules)) {
+                _.forEach(this.validationRule, function(validation, rule) {
+                    if (valid && _.has(config.rules, rule)) {
+                        if (!validation()) {
+                            valid = false;
+                            return false;
                         }
-                    });
-                }
-                return valid;
-            })()
+                    }
+                }.bind(this));
+            }
+            return valid;
         },
-        customValid: function(parsedObj) {
-            var that = this;
-            return (function() {
-                var valid = true;
-                if (!_.isEmpty(config.rules) && !_.isEmpty(config.rules.custom)) {
-                    _.forEach(that.customValidationRule, function(validation, rule) {
-                        if (valid && _.has(config.rules, rule)) {
-                            if (!validation(parsedObj)) {
-                                valid = false;
-                                return false;
-                            }
+        customValid: function() {
+            var parsedObj = SiftUtils.createResultObj(config);
+            var valid = true;
+            if (!_.isEmpty(config.rules) && !_.isEmpty(config.rules.custom)) {
+                _.forEach(this.customValidationRule, function(validation, rule) {
+                    if (valid && _.has(config.rules, rule)) {
+                        if (!validation(parsedObj)) {
+                            valid = false;
+                            return false;
                         }
-                    });
-                }
-                return valid;
-            })()
-        }
+                    }
+                });
+            }
+            this.resultObj = parsedObj;
+            return valid;
+        },
+        resultObj : null
     };
 
-
-    if(     !siftValidationObj.valid()
-        ||  !argValidationObj.valid()
-        ||  (
-            createResultObj() && !argValidationObj.customValid(resultObj)
-            )
-    ){
+    if(!siftValidationObj.valid() || !argValidationObj.valid() || !argValidationObj.customValid()) {
         return false;
     }
 
-    return resultObj;
+    return argValidationObj.resultObj;
 };
 
 
@@ -410,31 +482,30 @@ var Sift = function(config) {
 }(this, function(_){
     return function siftifiedFunction (config, thingy) {
 
-
-
         if(_.isFunction(thingy)) {
             return function () {
                 config.args = arguments;
                 Sift(config);
-                return thingy.apply(
-                    this,
-                    config.pairedArgs
-                        ? SiftUtil.getOnlyOddIndexes(_.flatten(arguments))
-                        : arguments
-                );
+                return SiftUtils.processRulesCollections(config)
+                    ? thingy.apply(
+                        this,
+                        config.pairedArgs
+                            ? SiftUtils.getOnlyOddIndexes(Array.prototype.slice.call(arguments))
+                            : arguments
+                      )
+                    : false;
             };
         }
 
         if(_.isArray(thingy)) {
-            var result = SiftUtil.processCollection(config, thingy);
-            return !result ? result :  thingy;
+            return SiftUtils.processSiftifiedCollection(config, thingy) ? thingy : false ;
         }
 
         if(!_.isUndefined(thingy)) {
             (function(){ throw new Error("Expected function to siftify or collection to evaluate"); })();
         }
 
-        return  Sift(config);
+        return SiftUtils.processRulesCollections(config) ? Sift(config) : false;
     }
 
 }));
