@@ -60,7 +60,7 @@ Declaratively perform validation on parameters in Sift's contract
 |    Name             | Description                                              |
 |:-------------------:|:--------------------------------------------------------:|
 |atLeastOne|At least one argument in contract must have a value|
-|collections|Map an argument that is a collection to a sift config which it will be evaluated against |
+|collections|Map parameters that are a collections to sift configs to evaluate them|
 |custom|Define custom validations with a callback function|
 |defaults|Set default values for arguments in this group that aren't present|
 |exclusive|Each argument in this group is mutually exclusive|
@@ -119,7 +119,7 @@ Declaratively perform validation on parameters in Sift's contract
             {"name":"Andrew", "email":"andrew@gmail.com"}
         ];
 
-        var fnConfig = {
+        var colConfig = {
           contract: ["name", "email"],
           failOnError: true,
           rules: {
@@ -128,7 +128,7 @@ Declaratively perform validation on parameters in Sift's contract
         };
 
         var assetAllObjectsInOriginalCollectionAreReturnedBySift = function () {
-            return _.every(Sift(fnConfig, col), function (obj) {
+            return _.every(Sift(colConfig, col), function (obj) {
                 return !_.isEmpty(_.where(col, obj));
             }.bind(this));
         };
@@ -194,7 +194,7 @@ fooBar(){
 
      var inputObj = Sift({
         contract:["url", "named", "clientId", "reconcile", "shell", "config", "year"],
-        args: this.args,
+        args: arguments,
         failOnError: true,
         pairedArgs: true,
         rules:{
