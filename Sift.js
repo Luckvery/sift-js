@@ -8,16 +8,30 @@ var SiftUtils = {
         var args = _.isUndefined(config.args) ? config.args : JSON.stringify(config._col_thing);
         return !!config._col_config ?["\nFailing Collection Item:\n"+args+"\nCollection Failure!!\n"+msg].join(" "): "";
     },
+    setUpSiftConfigForThingy : function (config, thing) {
+        config.args = thing;
+        config._col_thing = thing;
+        config._col_config = true;
+        return config;
+    },
+    siftify : function (config) {
+        return this.processRulesCollections(config) ? Sift(config) : false;
+    },
     processSiftifiedCollection: function (config, collection) {
-        var result = true;
-        _.each(collection, function (thing) {
-            config.args = thing;
-            config._col_thing = thing;
-            config._col_config = true;
-            var thingResult = Sift(config);
-            if(_.isBoolean(thingResult) && _.isEqual(thingResult, false)) result = false;
-        });
-        return result;
+        return _.every(collection, function (thing) {
+            return !this.siftify(this.setUpSiftConfigForThingy(config, thing)) === false;
+        }.bind(this));
+    },
+    processRulesCollections : function(mainConfig) {
+        if(!this.validateCollectionObj(mainConfig)) return false;
+        return _.every(mainConfig.rules.collections, function (formatedArgs, config, key) {
+            if (!this.paramPresent(formatedArgs, key)) return true;
+            if (this.validCollectionArg(config,formatedArgs, key)) {
+                return this.processSiftifiedCollection(config, this.paramValue(formatedArgs, key)) &&
+                       this.processRulesCollections(config);
+            }
+            return false;
+        }.bind(this, this.normalizeForUnPairedArguments(mainConfig)));
     },
     getOnlyOddIndexes: function (args) {
         return _.transform(args, function (result, item, index) {
@@ -35,14 +49,40 @@ var SiftUtils = {
     paramValue : function (formatedArgs, key) {
         return formatedArgs[_.indexOf(formatedArgs, key) + 1];
     },
-    processRulesCollections : function(mainConfig) {
-        var result = true;
-        _.each(mainConfig.rules.collections, function (formatedArgs, config, key) {
-            if (result && this.paramPresent(formatedArgs, key) && this.paramValuePresent(formatedArgs, key)) {
-                result = this.processSiftifiedCollection(config, this.paramValue(formatedArgs, key));
+    validateCollectionObj : function (config) {
+        if(!_.isUndefined(config.rules.collections) && !_.isPlainObject(config.rules.collections)) {
+            return config.failOnError
+                ? this.throwError(
+                    'Sift.rules.collections violation: If present Rules.collections property should be an object',
+                    config
+                  )
+                : false;
+        }
+        return this.validateCollectionSubProp(config);
+    },
+    validateCollectionSubProp : function (config) {
+       return _.every(config.rules.collections, function (val) {
+            if(!_.isPlainObject(val)){
+                return config.failOnError
+                ? this.throwError(
+                    'Sift.rules.collections violation: Rules.collections sub-properties should be an object',
+                    config
+                  )
+                : false;
             }
-        }.bind(this, this.normalizeForUnPairedArguments(mainConfig)));
-        return result;
+           return true;
+        }.bind(this));
+    },
+    validCollectionArg : function (config,formatedArgs, key) {
+        if(this.paramValuePresent(formatedArgs, key) && !_.isArray(this.paramValue(formatedArgs, key))){
+            return config.failOnError
+                ? this.throwError(
+                    'Sift.rules.collections violation: Expected argument ' + ' to be an array',
+                    config
+                  )
+                : false;
+        }
+        return true;
     },
     applyMapValues : function(map, key, value) {
         return (_.contains(_.keys(map), key) && _.has(map[key], value)) ? map[key][value] : value;
@@ -69,13 +109,13 @@ var SiftUtils = {
         return result;
     },
     normalizeForUnPairedArguments : function(config) {
-        args = _.isArguments(config.args) ? Array.prototype.slice.call(config.args) : config.args;
+        var args = _.isArguments(config.args) ? Array.prototype.slice.call(config.args) : config.args;
         return config.pairedArgs ? args : this.mapContractToValues(config.contract, args);
     },
     normalizeForParamValuePairArray : function (contract, args) {
         var result = [];
         _.each(contract, function (param, index) {
-            if(!_.isEmpty(args[index])) {
+            if(!_.isNull(args) && !_.isUndefined(args) && !_.isEmpty(args[index])) {
                 result.push(param);
                 result.push(args[index]);
             }
@@ -361,7 +401,7 @@ var Sift = function(config) {
                     if (result && !_.contains(config.args, arg)){
                         config.failOnError && SiftUtils.throwError(
                             "Sift.rules.required violation: 1 or more required argument(s) missing. " +
-                            "Required argument(s): " + config.rules.required,
+                            "Required argument(s): [" + config.rules.required + "]",
                             config
                         );
                         result = false;
@@ -505,15 +545,15 @@ var Sift = function(config) {
         if(_.isFunction(thingy)) {
             return function () {
                 config.args = arguments;
-                Sift(config);
-                return SiftUtils.processRulesCollections(config)
-                    ? thingy.apply(
+
+                return SiftUtils.siftify(config) === false
+                    ? false
+                    : thingy.apply(
                         this,
                         config.pairedArgs
                             ? SiftUtils.getOnlyOddIndexes(Array.prototype.slice.call(arguments))
                             : arguments
-                      )
-                    : false;
+                      );
             };
         }
 
@@ -525,7 +565,7 @@ var Sift = function(config) {
             (function(){ throw new Error("Expected function to siftify or collection to evaluate"); })();
         }
 
-        return SiftUtils.processRulesCollections(config) ? Sift(config) : false;
+        return SiftUtils.siftify(config);
     }
 
 }));

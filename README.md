@@ -134,6 +134,82 @@ Declaratively perform validation on parameters in Sift's contract
         };
 
         console.log(assetAllObjectsInOriginalCollectionAreReturnedBySift()); // true!!
+
+```
+#### Use Sift to validate a nested collection
+Configs for nested collections work as usual. The only thing you have to remember is that the args for nested config
+(in the Rules.collections object) will be ignored. Lets clarify this idea with the following example from our tests
+
+```
+        var captainCollection = [
+            {'captain': 'captain1', 'email': 'captain1@gmail.com', wars: 3},
+            {'captain': 'captain2', 'email': 'captain2@gmail.com', wars: 3},
+            {'captain': 'captain3', 'email': 'captain3@gmail.com'},
+            {'captain': 'captain4', 'email': 'captain4@gmail.com', wars: 4},
+            {'captain': 'captain5', 'email': 'captain5@gmail.com', wars: 6}
+        ];
+
+        var captainCollectionConfig = {
+            contract: ['captain', 'wars', 'email'],        // process current level in hierarchy
+            failOnError: true,
+            pairedArgs: true,
+            rules: {
+                required: ['captain', 'email', 'wars'],
+                type:{
+                    'wars':['number']
+                }
+            }
+        };
+
+        var regionalCommanders = [
+            {'general': 'Russell', ships: 6, region:'France', 'email': 'russell@gmail.com', captains : captainCollection},
+            {'general': 'David', ships: 3, region:'England', 'email': 'david@gmail.com', captains : captainCollection},
+            {'general': 'Paul', ships: 1, region:'Spain', 'email': 'paul@gmail.com', captains : captainCollection},
+            {'general': 'Shawn', ships: 3, region:'Netherlands', 'email': 'shawn@gmail.com', captains : captainCollection},
+            {'general': 'Ryan', ships: 5, region:'Belgium', 'email': 'ryan@gmail.com', captains : captainCollection},
+            {'general': 'Anthony', ships: 9, region:'Ireland', 'email': 'anthony@gmail.com', captains : captainCollection},
+            {'general': 'Fred', ships: 7, region:'Germany', 'email': 'fred@gmail.com', captains : captainCollection},
+            {'general': 'Dennis', ships: 1, region:'Italy', 'email': 'dennis@gmail.com', captains : captainCollection},
+            {'general': 'Andrew', ships: 7, region:'Switzerland', 'email': 'andrew@gmail.com', captains : captainCollection}
+        ];
+
+        var regionalCommandersConfig = {
+            contract: ['general', 'ships', 'region', 'email', 'captains'], // process current level in hierarchy
+            failOnError: true,
+            pairedArgs: true,
+            rules: {
+                required: ['captains'],
+                collections: {
+                    'captains': captainCollectionConfig                    // process next level down in hierarchy
+                },
+                type:{
+                    'ships':['number']
+                }
+            }
+        };
+
+        var mainConfig = {
+            contract: ['planet', 'attempt', 'generals'],
+            args: ['planet', 'earth', 'attempt', '3', 'generals', regionalCommanders],
+            pairedArgs: true,
+            rules: {
+                collections: {
+                    'generals': regionalCommandersConfig
+                }
+            }
+        };
+
+        expect(function(){
+            Sift(mainConfig);
+        }).toThrow(
+            new Error(
+                '\nFailing Collection Item:\n'+
+                '{"captain":"captain3","email":"captain3@gmail.com"}'+
+                '\nCollection Failure!!\n'+
+                'Sift.rules.required violation: 1 or more required argument(s) missing. ' +
+                'Required argument(s): [captain,email,wars]'
+            )
+        );
 ```
 #### Contrived grunt worker task
 ```
