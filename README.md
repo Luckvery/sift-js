@@ -133,12 +133,14 @@ Declaratively perform validation on parameters in Sift's contract
             }.bind(this));
         };
 
-        console.log(assetAllObjectsInOriginalCollectionAreReturnedBySift()); // true!!
+        // true!!
+        console.log(assetAllObjectsInOriginalCollectionAreReturnedBySift());
 
 ```
 #### Use Sift to validate a nested collection
 Configs for nested collections work as usual. The only thing you have to remember is that the args for nested config
-(in the Rules.collections object) will be ignored. Lets clarify this idea with the following example from our tests
+(in the Rules.collections object) will be ignored. Lets clarify this idea with the following code fragment from our
+[tests](https://github.com/Luckvery/sift-js/blob/master/spec/SiftSpec.js#L930 "Tests!!! Yay!!!" ):
 
 ```
         var captainCollection = [
@@ -150,7 +152,8 @@ Configs for nested collections work as usual. The only thing you have to remembe
         ];
 
         var captainCollectionConfig = {
-            contract: ['captain', 'wars', 'email'],        // process current level in hierarchy
+            // process current level in hierarchy
+            contract: ['captain', 'wars', 'email'],
             failOnError: true,
             pairedArgs: true,
             rules: {
@@ -161,26 +164,82 @@ Configs for nested collections work as usual. The only thing you have to remembe
             }
         };
 
-        var regionalCommanders = [
-            {'general': 'Russell', ships: 6, region:'France', 'email': 'russell@gmail.com', captains : captainCollection},
-            {'general': 'David', ships: 3, region:'England', 'email': 'david@gmail.com', captains : captainCollection},
-            {'general': 'Paul', ships: 1, region:'Spain', 'email': 'paul@gmail.com', captains : captainCollection},
-            {'general': 'Shawn', ships: 3, region:'Netherlands', 'email': 'shawn@gmail.com', captains : captainCollection},
-            {'general': 'Ryan', ships: 5, region:'Belgium', 'email': 'ryan@gmail.com', captains : captainCollection},
-            {'general': 'Anthony', ships: 9, region:'Ireland', 'email': 'anthony@gmail.com', captains : captainCollection},
-            {'general': 'Fred', ships: 7, region:'Germany', 'email': 'fred@gmail.com', captains : captainCollection},
-            {'general': 'Dennis', ships: 1, region:'Italy', 'email': 'dennis@gmail.com', captains : captainCollection},
-            {'general': 'Andrew', ships: 7, region:'Switzerland', 'email': 'andrew@gmail.com', captains : captainCollection}
+        regionalCommanders = [
+            {
+                'general': 'Russell',
+                ships: 6,
+                region: 'France',
+                'email': 'russell@gmail.com',
+                captains: captainCollection
+            },
+            {
+                'general': 'David',
+                ships: 3,
+                region: 'England',
+                'email': 'david@gmail.com',
+                captains: captainCollection
+            },
+            {
+                'general': 'Paul',
+                ships: 1,
+                region: 'Spain',
+                'email': 'paul@gmail.com',
+                captains: captainCollection
+            },
+            {
+                'general': 'Shawn',
+                ships: 3,
+                region: 'Netherlands',
+                'email': 'shawn@gmail.com',
+                captains: captainCollection
+            },
+            {
+                'general': 'Ryan',
+                ships: 5,
+                region: 'Belgium',
+                'email': 'ryan@gmail.com',
+                captains: captainCollection
+            },
+            {
+                'general': 'Anthony',
+                ships: 9,
+                region: 'Ireland',
+                'email': 'anthony@gmail.com',
+                captains: captainCollection
+            },
+            {
+                'general': 'Fred',
+                ships: 7,
+                region: 'Germany',
+                'email': 'fred@gmail.com',
+                captains: captainCollection
+            },
+            {
+                'general': 'Dennis',
+                ships: 1,
+                region: 'Italy',
+                'email': 'dennis@gmail.com',
+                captains: captainCollection
+            },
+            {
+                'general': 'Andrew',
+                ships: 7,
+                region: 'Switzerland',
+                'email': 'andrew@gmail.com',
+                captains: captainCollection
+            }
         ];
 
-        var regionalCommandersConfig = {
-            contract: ['general', 'ships', 'region', 'email', 'captains'], // process current level in hierarchy
+        regionalCommandersConfig = {
+            // process current level in hierarchy
+            contract: ['general', 'ships', 'region', 'email', 'captains'],
             failOnError: true,
             pairedArgs: true,
             rules: {
                 required: ['captains'],
+                // process next level down in hierarchy
                 collections: {
-                    'captains': captainCollectionConfig                    // process next level down in hierarchy
+                    'captains': captainCollectionConfig
                 },
                 type:{
                     'ships':['number']
@@ -190,7 +249,14 @@ Configs for nested collections work as usual. The only thing you have to remembe
 
         var mainConfig = {
             contract: ['planet', 'attempt', 'generals'],
-            args: ['planet', 'earth', 'attempt', '3', 'generals', regionalCommanders],
+            args: [
+                'planet',
+                'earth',
+                'attempt',
+                '3',
+                'generals',
+                regionalCommanders
+            ],
             pairedArgs: true,
             rules: {
                 collections: {
@@ -206,7 +272,8 @@ Configs for nested collections work as usual. The only thing you have to remembe
                 '\nFailing Collection Item:\n'+
                 '{"captain":"captain3","email":"captain3@gmail.com"}'+
                 '\nCollection Failure!!\n'+
-                'Sift.rules.required violation: 1 or more required argument(s) missing. ' +
+                'Sift.rules.required violation: ' +
+                '1 or more required argument(s) missing. ' +
                 'Required argument(s): [captain,email,wars]'
             )
         );
@@ -214,7 +281,10 @@ Configs for nested collections work as usual. The only thing you have to remembe
 #### Contrived grunt worker task
 ```
 module.exports = function(grunt) {
-    grunt.registerTask('worker', 'worker task to update files on S3 or DynamoDB', function() {
+    grunt.registerTask(
+    'worker',
+    'worker task to update files on S3 or DynamoDB',
+    function() {
 
         var inputObj = Sift(["update"],
             this.args, {
@@ -269,7 +339,9 @@ fooBar(){
      ];
 
      var inputObj = Sift({
-        contract:["url", "named", "clientId", "reconcile", "shell", "config", "year"],
+        contract:[
+          "url", "named", "clientId", "reconcile", "shell", "config", "year"
+        ],
         args: arguments,
         failOnError: true,
         pairedArgs: true,
@@ -285,7 +357,7 @@ fooBar(){
                 },
                 only: {
                     "shell": ["Terminal", "iTerm"],
-                    "config: ["yes", "no"]
+                    "config": ["yes", "no"]
                 },
                 defaults: {
                     "shell": "Terminal"
