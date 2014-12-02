@@ -9,6 +9,11 @@
 > Run your parameters through the Sift to define rules upfront, simplifying your js implementation.
 
 I use this a lot with grunt. I plan on using it in a few other js projects too.  I'd love to hear any feed back on improvements and ways you've used it!
+## Installation
+
+```shell
+  npm install siftjs --save
+```
 
 
 ### The Sift Config Object
@@ -133,8 +138,7 @@ Declaratively perform validation on parameters in Sift's contract
             }.bind(this));
         };
 
-        // true!!
-        console.log(assetAllObjectsInOriginalCollectionAreReturnedBySift());
+        console.log(assetAllObjectsInOriginalCollectionAreReturnedBySift()); // true!!
 
 ```
 #### Use Sift to validate a nested collection
