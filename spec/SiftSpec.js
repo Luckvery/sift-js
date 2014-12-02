@@ -2,13 +2,11 @@
     var _ = require('lodash');
     var testSiftCall;
 
-
     beforeEach(function() {
         testSiftCall = function(siftConfig) {
             return function() {var inputObj = Sift(siftConfig); return inputObj;};
         }
     });
-
 
     describe('Testing Sift Object\'s Contract Property', function() {
         var contractSiftCall;
@@ -174,7 +172,8 @@
 
         });
 
-        it('As array or arguments object, Even Args elements are names of parameters, odd elements their values: [a,v(a),b,v(b)]', function() {
+        it('As array or arguments object, Even Args elements are names of parameters, odd elements their values: ' +
+        '[a,v(a),b,v(b)]', function() {
 
             var parameterName1 = 'foo';
             var parameterValue1 = 'WOW';
@@ -216,7 +215,8 @@
 
         });
 
-        it('Calling Sift with Args as object literal with parameters that are not in the contract will fail', function() {
+        it('Calling Sift with Args as object literal with parameters that are not in the contract will fail',
+            function() {
 
             var argsOLPropertiesNotInContract = function() {
                 var argumentsOb  = arguments;
@@ -254,7 +254,8 @@
             );
         });
 
-        it('Calling Sift with Args as arguments object with parameters that are not in the contract will fail', function() {
+        it('Calling Sift with Args as arguments object with parameters that are not in the contract will fail',
+            function() {
 
             var argsArgumentsPropertiesNotInContract = function() {
                 var argumentsOb  = arguments;
@@ -274,7 +275,8 @@
             );
         });
 
-        it('Calling Sift with Args as object literal ommitting Args parameters that are in the contract is ok', function() {
+        it('Calling Sift with Args as object literal ommitting Args parameters that are in the contract is ok',
+            function() {
             var passingArgsJSON = function() {
                 var inputObj = Sift({
                     contract: ['foo', 'bar'],
@@ -306,7 +308,8 @@
             expect(inputObj.bar).toBe('pear');
         });
 
-        it('Calling Sift with Args as arguments object ommitting Args parameters that are in the contract is ok', function() {
+        it('Calling Sift with Args as arguments object ommitting Args parameters that are in the contract is ok',
+            function() {
             var argumentsObjWithLessThanContract = function() {
 
                 var inputObj = Sift({
@@ -373,7 +376,8 @@
                 expect(inputObj.bar).toBe('');
             });
 
-            it('More than one parameter from rules.exclusive group present in args and Sift will throw error', function() {
+            it('More than one parameter from rules.exclusive group present in args and Sift will throw error',
+                function() {
                 SiftObjectWithOutRules.rules.exclusive  = [
                     ['foo', 'bar']
                 ];
@@ -393,7 +397,8 @@
                 );
             });
 
-            it('Rules.requires property created says if foo is present and bar is not present, Sift throws error', function() {
+            it('Rules.requires property created says if foo is present and bar is not present, Sift throws error',
+                function() {
 
                 SiftObjectWithOutRules.rules.requires  =  {
                     'foo': ['bar']
@@ -401,12 +406,14 @@
 
                 SiftObjectWithOutRules.args  =  ['foo', 'apple'];
                 expect(testSiftCall(SiftObjectWithOutRules)).toThrow(
-                    new Error('Sift.rules.requires violation: If foo exists as an argument, then bar must be present as an argument')
+                    new Error('Sift.rules.requires violation: If foo exists as an argument, ' +
+                    'then bar must be present as an argument')
                 );
 
             });
 
-            it('Rules.requires property created says if foo is present then bar must be present for Sift to be ok', function() {
+            it('Rules.requires property created says if foo is present then bar must be present for Sift to be ok',
+                function() {
 
                 SiftObjectWithOutRules.rules.requires  =  {
                     'foo': ['bar']
@@ -448,7 +455,8 @@
 
             });
 
-            it('Sift will throw error if any parameter values passed are not in Rules.only array for each argument', function() {
+            it('Sift will throw error if any parameter values passed are not in Rules.only array for each argument',
+                function() {
 
                 SiftObjectWithOutRules.rules.only  = {
                     'foo': ['apple', 'orange'],
@@ -456,7 +464,8 @@
                 };
                 SiftObjectWithOutRules.args = ['foo', 'pineapple'];
                 expect(testSiftCall(SiftObjectWithOutRules)).toThrow(
-                    new Error('Sift.rules.only violation: pineapple is not valid value for foo. Valid values for foo are: [ apple,orange ]')
+                    new Error('Sift.rules.only violation: pineapple is not valid value for foo. ' +
+                    'Valid values for foo are: [ apple,orange ]')
                 );
 
             });
@@ -466,10 +475,15 @@
         describe('Testing Sift Object\'s Rules.atleastOne Property', function() {
             it('Rules.atleastOne property should be an boolean or undefined', function() {
                 SiftObjectWithOutRules.rules.atLeastOne  =  '';
-                expect(testSiftCall(SiftObjectWithOutRules)).toThrow(new Error('Sift.rules.atLeastOne violation: If present Rules.atLeastOne property should be a boolean'));
+                expect(testSiftCall(SiftObjectWithOutRules)).toThrow(
+                    new Error(
+                        'Sift.rules.atLeastOne violation: If present Rules.atLeastOne property should be a boolean'
+                    )
+                );
             });
 
-            it('Sift OK if Rules.atleastOne property is true and at least one argument in the contract array must be present', function() {
+            it('Sift OK if Rules.atleastOne property is true and at least one argument in the contract array must ' +
+            'be present', function() {
                 SiftObjectWithOutRules.rules.atLeastOne  =  true;
 
                 SiftObjectWithOutRules.args  =  ['foo', 'apple'];
@@ -480,7 +494,8 @@
 
             });
 
-            it('Sift error is thrown if Rules.atleastOne property is true and no argument from the contract array is present', function() {
+            it('Sift error is thrown if Rules.atleastOne property is true and no argument from the contract ' +
+            'array is present', function() {
                 SiftObjectWithOutRules.rules.atLeastOne  =  true;
 
                 SiftObjectWithOutRules.args  =  [];
@@ -514,7 +529,8 @@
                 expect(inputObj.bar).toBe(10743);
             });
 
-            it('Sift will throw error if args contains parameters with corresponding types that conflict with Rules.type property', function() {
+            it('Sift will throw error if args contains parameters with corresponding types that conflict with ' +
+            'Rules.type property', function() {
 
                 SiftObjectWithOutRules.rules.type  = {
                    'foo':['String'],
@@ -523,12 +539,16 @@
 
                 SiftObjectWithOutRules.args  =  ['foo', '10743','bar', 'apple'];
                 expect(testSiftCall(SiftObjectWithOutRules)).toThrow(
-                    new Error('Sift.rules.type violation: Type check fail for value apple of bar. Expected type: [Number]')
+                    new Error(
+                        'Sift.rules.type violation: Type check fail for value apple of bar. Expected type: [Number]'
+                    )
                 );
 
                 SiftObjectWithOutRules.args  =  ['foo', 10743,'bar', 'apple'];
                 expect(testSiftCall(SiftObjectWithOutRules)).toThrow(
-                    new Error('Sift.rules.type violation: Type check fail for value 10743 of foo. Expected type: [String]')
+                    new Error(
+                        'Sift.rules.type violation: Type check fail for value 10743 of foo. Expected type: [String]'
+                    )
                 );
             });
 
@@ -567,7 +587,8 @@
                 );
             });
 
-            it('If one param in Rules.oneForAll property exists in Sift.args then all params in Rules.oneForAll must be present', function() {
+            it('If one param in Rules.oneForAll property exists in Sift.args then all params in Rules.oneForAll must' +
+            ' be present', function() {
                 SiftObjectWithOutRules.rules.oneForAll  = ['foo', 'bar'];
                 expect(testSiftCall(SiftObjectWithOutRules)).not.toThrow();
 
@@ -578,11 +599,15 @@
                 expect(inputObj.bar).toBe('pear');
             });
 
-            it('Sift throws error if 1 or more argument in Rules.oneForAll property group is specified and not in Sift.args', function() {
+            it('Sift throws error if 1 or more argument in Rules.oneForAll property group is specified ' +
+            'and not in Sift.args', function() {
                 SiftObjectWithOutRules.rules.oneForAll  = ['foo', 'bar'];
                 SiftObjectWithOutRules.args  = ['foo', 'apple'];
                 expect(testSiftCall(SiftObjectWithOutRules)).toThrow(
-                    new Error('Sift.rules.oneForAll violation: If 1 argument in this group is specified, they all must be specified: foo,bar')
+                    new Error(
+                        'Sift.rules.oneForAll violation: If 1 argument in this group is specified, ' +
+                        'they all must be specified: foo,bar'
+                    )
                 );
             });
         });
@@ -788,7 +813,8 @@
                             '\nFailing Collection Item:\n'+
                             'undefined'+
                             '\nCollection Failure!!\n'+
-                            'Sift violation: Argument list must be an array, argument object or object literal of argument name/value pairs'
+                            'Sift violation: Argument list must be an array, ' +
+                            'argument object or object literal of argument name/value pairs'
                         )
                     );
 
@@ -840,7 +866,8 @@
                             '\nFailing Collection Item:\n'+
                             'null'+
                             '\nCollection Failure!!\n'+
-                            'Sift violation: Argument list must be an array, argument object or object literal of argument name/value pairs'
+                            'Sift violation: Argument list must be an array, ' +
+                            'argument object or object literal of argument name/value pairs'
                         )
                     );
 
@@ -892,7 +919,8 @@
                             '\nFailing Collection Item:\n'+
                             '\"\"'+
                             '\nCollection Failure!!\n'+
-                            'Sift violation: Argument list must be an array, argument object or object literal of argument name/value pairs'
+                            'Sift violation: Argument list must be an array, ' +
+                            'argument object or object literal of argument name/value pairs'
                         )
                     );
 
@@ -900,13 +928,15 @@
             });
 
             describe('Rules.collections nested collections', function () {
-                // Configs for nested collections work as usual. The only thing you have to remember is that args for nested
-                // config (in the Rules.collections object) will be ignored. Lets clarify this idea with the following example.
+                // Configs for nested collections work as usual. The only thing you have to remember is
+                // that args for nested config (in the Rules.collections object) will be ignored.
+                // Lets clarify this idea with the following example.
 
-                // Aliens from outer space have attacked!! They have taken over several parts of Europe and convinced
-                // people that programming languages that use semi colons are wrong. Below is a piece of code that we found
-                // where they are using sift to validate a nested collection of their military organization chart. We will
-                // use this example to see how we can use sift with nested collections and better understand our enemies.
+                // Aliens from outer space have attacked!! They have taken over several parts of Europe
+                // and convinced people that programming languages that use semi colons are wrong. Below
+                // is a piece of code that we found where they are using sift to validate a nested
+                // collection of their military organization chart. We will use this example to see
+                // how we can use sift with nested collections and better understand our enemies.
 
                 var privateCollection;
                 var badPrivateCollection;
@@ -928,19 +958,64 @@
                 var alienDataConfig = function(useBadPrivateCollection) {
 
                     privateCollection = [
-                        {'name': 'private1', 'seenCombat': 'no', 'psychEval': 'athletic', 'email': 'private1@gmail.com'},
-                        {'name': 'private2', 'seenCombat': 'no', 'psychEval': 'emotional', 'email': 'private2@gmail.com'},
-                        {'name': 'private3', 'seenCombat': 'yes', 'psychEval': 'emotional', 'email': 'private3@gmail.com'},
-                        {'name': 'private4', 'seenCombat': 'no', 'psychEval': 'analytic', 'email': 'private4@gmail.com'},
-                        {'name': 'private5', 'seenCombat': 'no', 'psychEval': 'intellectual', 'email': 'private5@gmail.com'}
+                        {
+                            'name': 'private1',
+                            'seenCombat': 'no',
+                            'psychEval': 'athletic',
+                            'email': 'private1@gmail.com'
+                        },
+                        {
+                            'name': 'private2',
+                            'seenCombat': 'no',
+                            'psychEval': 'emotional',
+                            'email': 'private2@gmail.com'
+                        },
+                        {
+                            'name': 'private3',
+                            'seenCombat': 'yes',
+                            'psychEval': 'emotional',
+                            'email': 'private3@gmail.com'
+                        },
+                        {
+                            'name': 'private4',
+                            'seenCombat': 'no',
+                            'psychEval': 'analytic',
+                            'email': 'private4@gmail.com'
+                        },
+                        {
+                            'name': 'private5',
+                            'seenCombat': 'no',
+                            'psychEval': 'intellectual',
+                            'email': 'private5@gmail.com'
+                        }
                     ];
 
                     badPrivateCollection = [
-                        {'name': 'private1', 'seenCombat': 'no', 'psychEval': 'athletic', 'email': 'private1@gmail.com'},
+                        {
+                            'name': 'private1',
+                            'seenCombat': 'no',
+                            'psychEval': 'athletic',
+                            'email': 'private1@gmail.com'
+                        },
                         {'name': 'private2', 'seenCombat': 'no', 'psychEval': 'emotional'},
-                        {'name': 'private3', 'seenCombat': 'yes', 'psychEval': 'emotional', 'email': 'private3@gmail.com'},
-                        {'name': 'private4', 'seenCombat': 'no', 'psychEval': 'analytic', 'email': 'private4@gmail.com'},
-                        {'name': 'private5', 'seenCombat': 'no', 'psychEval': 'intellectual', 'email': 'private5@gmail.com'}
+                        {
+                            'name': 'private3',
+                            'seenCombat': 'yes',
+                            'psychEval': 'emotional',
+                            'email': 'private3@gmail.com'
+                        },
+                        {
+                            'name': 'private4',
+                            'seenCombat': 'no',
+                            'psychEval': 'analytic',
+                            'email': 'private4@gmail.com'
+                        },
+                        {
+                            'name': 'private5',
+                            'seenCombat': 'no',
+                            'psychEval': 'intellectual',
+                            'email': 'private5@gmail.com'
+                        }
                     ];
 
                     privateCollectionConfig = {
@@ -1025,14 +1100,16 @@
                     ];
 
                     corporalCollectionConfig = {
-                        contract: ['name', 'email', 'privatesFirstClass', 'privates'],// process current level in hierarchy
+                        // process current level in hierarchy
+                        contract: ['name', 'email', 'privatesFirstClass', 'privates'],
                         failOnError: true,
                         pairedArgs: true,
                         rules: {
                             required: ['name', 'email', 'privates', 'privatesFirstClass'],
+                            // process next level down in hierarchy
                             collections: {
                                 'privates': privateCollectionConfig,
-                                'privateFirstClass': privateFirstClassCollectionConfig// process next level down in hierarchy
+                                'privateFirstClass': privateFirstClassCollectionConfig
                             }
                         }
                     };
@@ -1079,21 +1156,46 @@
                     };
 
                     captainCollection = [
-                        {'captain': 'captain1', 'email': 'captain1@gmail.com', wars: 3, lieutenants : lieutenantCollection},
-                        {'captain': 'captain2', 'email': 'captain2@gmail.com', wars: 3, lieutenants : lieutenantCollection},
-                        {'captain': 'captain3', 'email': 'captain3@gmail.com', wars: 2, lieutenants : lieutenantCollection},
-                        {'captain': 'captain4', 'email': 'captain4@gmail.com', wars: 4, lieutenants : lieutenantCollection},
-                        {'captain': 'captain5', 'email': 'captain5@gmail.com', wars: 6, lieutenants : lieutenantCollection}
+                        {
+                            'captain': 'captain1',
+                            'email': 'captain1@gmail.com',
+                            wars: 3,
+                            lieutenants: lieutenantCollection
+                        },
+                        {
+                            'captain': 'captain2',
+                            'email': 'captain2@gmail.com',
+                            wars: 3,
+                            lieutenants: lieutenantCollection
+                        },
+                        {
+                            'captain': 'captain3',
+                            'email': 'captain3@gmail.com',
+                            wars: 2,
+                            lieutenants: lieutenantCollection
+                        },
+                        {
+                            'captain': 'captain4',
+                            'email': 'captain4@gmail.com',
+                            wars: 4,
+                            lieutenants: lieutenantCollection
+                        },
+                        {
+                            'captain': 'captain5',
+                            'email': 'captain5@gmail.com',
+                            wars: 6,
+                            lieutenants: lieutenantCollection
+                        }
                     ];
 
                     captainCollectionConfig = {
-                        contract: ['captain', 'wars', 'email', 'lieutenants'],        // process current level in hierarchy
+                        contract: ['captain', 'wars', 'email', 'lieutenants'], // process current level in hierarchy
                         failOnError: true,
                         pairedArgs: true,
                         rules: {
                             required: ['captain', 'email', 'wars', 'lieutenants'],
                             collections: {
-                                'lieutenants': lieutenantCollectionConfig     // process next level down in hierarchy
+                                'lieutenants': lieutenantCollectionConfig      // process next level down in hierarchy
                             },
                             type:{
                                 'wars':['number']
@@ -1102,25 +1204,81 @@
                     };
 
                     regionalCommanders = [
-                        {'general': 'Russell', ships: 6, region:'France', 'email': 'russell@gmail.com', captains : captainCollection},
-                        {'general': 'David', ships: 3, region:'England', 'email': 'david@gmail.com', captains : captainCollection},
-                        {'general': 'Paul', ships: 1, region:'Spain', 'email': 'paul@gmail.com', captains : captainCollection},
-                        {'general': 'Shawn', ships: 3, region:'Netherlands', 'email': 'shawn@gmail.com', captains : captainCollection},
-                        {'general': 'Ryan', ships: 5, region:'Belgium', 'email': 'ryan@gmail.com', captains : captainCollection},
-                        {'general': 'Anthony', ships: 9, region:'Ireland', 'email': 'anthony@gmail.com', captains : captainCollection},
-                        {'general': 'Fred', ships: 7, region:'Germany', 'email': 'fred@gmail.com', captains : captainCollection},
-                        {'general': 'Dennis', ships: 1, region:'Italy', 'email': 'dennis@gmail.com', captains : captainCollection},
-                        {'general': 'Andrew', ships: 7, region:'Switzerland', 'email': 'andrew@gmail.com', captains : captainCollection}
+                        {
+                            'general': 'Russell',
+                            ships: 6,
+                            region: 'France',
+                            'email': 'russell@gmail.com',
+                            captains: captainCollection
+                        },
+                        {
+                            'general': 'David',
+                            ships: 3,
+                            region: 'England',
+                            'email': 'david@gmail.com',
+                            captains: captainCollection
+                        },
+                        {
+                            'general': 'Paul',
+                            ships: 1,
+                            region: 'Spain',
+                            'email': 'paul@gmail.com',
+                            captains: captainCollection
+                        },
+                        {
+                            'general': 'Shawn',
+                            ships: 3,
+                            region: 'Netherlands',
+                            'email': 'shawn@gmail.com',
+                            captains: captainCollection
+                        },
+                        {
+                            'general': 'Ryan',
+                            ships: 5,
+                            region: 'Belgium',
+                            'email': 'ryan@gmail.com',
+                            captains: captainCollection
+                        },
+                        {
+                            'general': 'Anthony',
+                            ships: 9,
+                            region: 'Ireland',
+                            'email': 'anthony@gmail.com',
+                            captains: captainCollection
+                        },
+                        {
+                            'general': 'Fred',
+                            ships: 7,
+                            region: 'Germany',
+                            'email': 'fred@gmail.com',
+                            captains: captainCollection
+                        },
+                        {
+                            'general': 'Dennis',
+                            ships: 1,
+                            region: 'Italy',
+                            'email': 'dennis@gmail.com',
+                            captains: captainCollection
+                        },
+                        {
+                            'general': 'Andrew',
+                            ships: 7,
+                            region: 'Switzerland',
+                            'email': 'andrew@gmail.com',
+                            captains: captainCollection
+                        }
                     ];
 
                     regionalCommandersConfig = {
-                        contract: ['general', 'ships', 'region', 'email', 'captains'], // process current level in hierarchy
+                        // process current level in hierarchy
+                        contract: ['general', 'ships', 'region', 'email', 'captains'],
                         failOnError: true,
                         pairedArgs: true,
                         rules: {
                             required: ['captains'],
+                            // process next level down in hierarchy
                             collections: {
-                                'captains': captainCollectionConfig                    // process next level down in hierarchy
+                                'captains': captainCollectionConfig
                             },
                             type:{
                                 'ships':['number']
@@ -1191,26 +1349,83 @@
                             }
                         }
                     };
+
                     regionalCommanders = [
-                        {'general': 'Russell', ships: 6, region:'France', 'email': 'russell@gmail.com', captains : captainCollection},
-                        {'general': 'David', ships: 3, region:'England', 'email': 'david@gmail.com', captains : captainCollection},
-                        {'general': 'Paul', ships: 1, region:'Spain', 'email': 'paul@gmail.com', captains : captainCollection},
-                        {'general': 'Shawn', ships: 3, region:'Netherlands', 'email': 'shawn@gmail.com', captains : captainCollection},
-                        {'general': 'Ryan', ships: 5, region:'Belgium', 'email': 'ryan@gmail.com', captains : captainCollection},
-                        {'general': 'Anthony', ships: 9, region:'Ireland', 'email': 'anthony@gmail.com', captains : captainCollection},
-                        {'general': 'Fred', ships: 7, region:'Germany', 'email': 'fred@gmail.com', captains : captainCollection},
-                        {'general': 'Dennis', ships: 1, region:'Italy', 'email': 'dennis@gmail.com', captains : captainCollection},
-                        {'general': 'Andrew', ships: 7, region:'Switzerland', 'email': 'andrew@gmail.com', captains : captainCollection}
+                        {
+                            'general': 'Russell',
+                            ships: 6,
+                            region: 'France',
+                            'email': 'russell@gmail.com',
+                            captains: captainCollection
+                        },
+                        {
+                            'general': 'David',
+                            ships: 3,
+                            region: 'England',
+                            'email': 'david@gmail.com',
+                            captains: captainCollection
+                        },
+                        {
+                            'general': 'Paul',
+                            ships: 1,
+                            region: 'Spain',
+                            'email': 'paul@gmail.com',
+                            captains: captainCollection
+                        },
+                        {
+                            'general': 'Shawn',
+                            ships: 3,
+                            region: 'Netherlands',
+                            'email': 'shawn@gmail.com',
+                            captains: captainCollection
+                        },
+                        {
+                            'general': 'Ryan',
+                            ships: 5,
+                            region: 'Belgium',
+                            'email': 'ryan@gmail.com',
+                            captains: captainCollection
+                        },
+                        {
+                            'general': 'Anthony',
+                            ships: 9,
+                            region: 'Ireland',
+                            'email': 'anthony@gmail.com',
+                            captains: captainCollection
+                        },
+                        {
+                            'general': 'Fred',
+                            ships: 7,
+                            region: 'Germany',
+                            'email': 'fred@gmail.com',
+                            captains: captainCollection
+                        },
+                        {
+                            'general': 'Dennis',
+                            ships: 1,
+                            region: 'Italy',
+                            'email': 'dennis@gmail.com',
+                            captains: captainCollection
+                        },
+                        {
+                            'general': 'Andrew',
+                            ships: 7,
+                            region: 'Switzerland',
+                            'email': 'andrew@gmail.com',
+                            captains: captainCollection
+                        }
                     ];
 
                     regionalCommandersConfig = {
-                        contract: ['general', 'ships', 'region', 'email', 'captains'], // process current level in hierarchy
+                        // process current level in hierarchy
+                        contract: ['general', 'ships', 'region', 'email', 'captains'],
                         failOnError: true,
                         pairedArgs: true,
                         rules: {
                             required: ['captains'],
+                            // process next level down in hierarchy
                             collections: {
-                                'captains': captainCollectionConfig                    // process next level down in hierarchy
+                                'captains': captainCollectionConfig
                             },
                             type:{
                                 'ships':['number']
@@ -1252,15 +1467,35 @@
                     ];
 
                     captainCollection = [
-                        {'captain': 'captain1', 'email': 'captain1@gmail.com', wars: 3 , lieutenants : lieutenantCollection},
-                        {'captain': 'captain2', 'email': 'captain2@gmail.com', wars: 3, lieutenants : lieutenantCollection},
-                        {'captain': 'captain3', 'email': 'captain3@gmail.com', lieutenants : lieutenantCollection},
-                        {'captain': 'captain4', 'email': 'captain4@gmail.com', wars: 4, lieutenants : lieutenantCollection},
-                        {'captain': 'captain5', 'email': 'captain5@gmail.com', wars: 6, lieutenants : lieutenantCollection}
+                        {
+                            'captain': 'captain1',
+                            'email': 'captain1@gmail.com',
+                            wars: 3,
+                            lieutenants: lieutenantCollection
+                        },
+                        {
+                            'captain': 'captain2',
+                            'email': 'captain2@gmail.com',
+                            wars: 3,
+                            lieutenants: lieutenantCollection
+                        },
+                        {'captain': 'captain3', 'email': 'captain3@gmail.com', lieutenants: lieutenantCollection},
+                        {
+                            'captain': 'captain4',
+                            'email': 'captain4@gmail.com',
+                            wars: 4,
+                            lieutenants: lieutenantCollection
+                        },
+                        {
+                            'captain': 'captain5',
+                            'email': 'captain5@gmail.com',
+                            wars: 6,
+                            lieutenants: lieutenantCollection
+                        }
                     ];
 
                     captainCollectionConfig = {
-                        contract: ['captain', 'wars', 'email', 'lieutenants'],        // process current level in hierarchy
+                        contract: ['captain', 'wars', 'email', 'lieutenants'],   // process current level in hierarchy
                         failOnError: true,
                         pairedArgs: true,
                         rules: {
@@ -1272,25 +1507,81 @@
                     };
 
                     regionalCommanders = [
-                        {'general': 'Russell', ships: 6, region:'France', 'email': 'russell@gmail.com', captains : captainCollection},
-                        {'general': 'David', ships: 3, region:'England', 'email': 'david@gmail.com', captains : captainCollection},
-                        {'general': 'Paul', ships: 1, region:'Spain', 'email': 'paul@gmail.com', captains : captainCollection},
-                        {'general': 'Shawn', ships: 3, region:'Netherlands', 'email': 'shawn@gmail.com', captains : captainCollection},
-                        {'general': 'Ryan', ships: 5, region:'Belgium', 'email': 'ryan@gmail.com', captains : captainCollection},
-                        {'general': 'Anthony', ships: 9, region:'Ireland', 'email': 'anthony@gmail.com', captains : captainCollection},
-                        {'general': 'Fred', ships: 7, region:'Germany', 'email': 'fred@gmail.com', captains : captainCollection},
-                        {'general': 'Dennis', ships: 1, region:'Italy', 'email': 'dennis@gmail.com', captains : captainCollection},
-                        {'general': 'Andrew', ships: 7, region:'Switzerland', 'email': 'andrew@gmail.com', captains : captainCollection}
+                        {
+                            'general': 'Russell',
+                            ships: 6,
+                            region: 'France',
+                            'email': 'russell@gmail.com',
+                            captains: captainCollection
+                        },
+                        {
+                            'general': 'David',
+                            ships: 3,
+                            region: 'England',
+                            'email': 'david@gmail.com',
+                            captains: captainCollection
+                        },
+                        {
+                            'general': 'Paul',
+                            ships: 1,
+                            region: 'Spain',
+                            'email': 'paul@gmail.com',
+                            captains: captainCollection
+                        },
+                        {
+                            'general': 'Shawn',
+                            ships: 3,
+                            region: 'Netherlands',
+                            'email': 'shawn@gmail.com',
+                            captains: captainCollection
+                        },
+                        {
+                            'general': 'Ryan',
+                            ships: 5,
+                            region: 'Belgium',
+                            'email': 'ryan@gmail.com',
+                            captains: captainCollection
+                        },
+                        {
+                            'general': 'Anthony',
+                            ships: 9,
+                            region: 'Ireland',
+                            'email': 'anthony@gmail.com',
+                            captains: captainCollection
+                        },
+                        {
+                            'general': 'Fred',
+                            ships: 7,
+                            region: 'Germany',
+                            'email': 'fred@gmail.com',
+                            captains: captainCollection
+                        },
+                        {
+                            'general': 'Dennis',
+                            ships: 1,
+                            region: 'Italy',
+                            'email': 'dennis@gmail.com',
+                            captains: captainCollection
+                        },
+                        {
+                            'general': 'Andrew',
+                            ships: 7,
+                            region: 'Switzerland',
+                            'email': 'andrew@gmail.com',
+                            captains: captainCollection
+                        }
                     ];
 
                     regionalCommandersConfig = {
-                        contract: ['general', 'ships', 'region', 'email', 'captains'], // process current level in hierarchy
+                        // process current level in hierarchy
+                        contract: ['general', 'ships', 'region', 'email', 'captains'],
                         failOnError: true,
                         pairedArgs: true,
                         rules: {
                             required: ['captains'],
+                            // process next level down in hierarchy
                             collections: {
-                                'captains': captainCollectionConfig                    // process next level down in hierarchy
+                                'captains': captainCollectionConfig
                             },
                             type:{
                                 'ships':['number']
@@ -1318,7 +1609,8 @@
                             '{"lieutenant":"lieutenant4","email":"lieutenant4@gmail.com"},' +
                             '{"lieutenant":"lieutenant5","email":"lieutenant5@gmail.com"}]}'+
                             '\nCollection Failure!!\n'+
-                            'Sift.rules.required violation: 1 or more required argument(s) missing. Required argument(s): [captain,email,wars]'
+                            'Sift.rules.required violation: 1 or more required argument(s) missing. ' +
+                            'Required argument(s): [captain,email,wars]'
                         )
                     );
                 });
@@ -1384,7 +1676,8 @@
                 });
 
 
-                it('Param value in Rules.map property is still applied when param is not present in args array', function() {
+                it('Param value in Rules.map property is still applied when param is not present in args array',
+                    function() {
                     var obviousFunction = function(thing){ return 'A pear is green';};
 
                     SiftObjectWithOutRules.args      = ['truck', 'rough'];
@@ -1429,7 +1722,10 @@
                 SiftObjectWithOutRules.rules.required = ['bar'] ;
                 SiftObjectWithOutRules.args  =  ['foo', 'apple'];
                 expect(testSiftCall(SiftObjectWithOutRules)).toThrow(
-                    new Error('Sift.rules.required violation: 1 or more required argument(s) missing. Required argument(s): [bar]')
+                    new Error(
+                        'Sift.rules.required violation: 1 or more required argument(s) missing. ' +
+                        'Required argument(s): [bar]'
+                    )
                 );
             });
 
@@ -1530,7 +1826,8 @@
             );
         });
 
-        describe('If Sift.failOnError property is set to false and error condition exists, Sift will return false', function() {
+        describe('If Sift.failOnError property is set to false and error condition exists, Sift will return false',
+            function() {
 
             var exampleSiftObj;
 
@@ -1552,7 +1849,8 @@
                 expect(inputObj).toBe(false);
             });
 
-            it('Sift.rules.only: Sift will throw error if any parameter values passed are not in Rules.only array for each argument', function() {
+            it('Sift.rules.only: Sift will throw error if any parameter values passed are not in Rules.only array' +
+            ' for each argument', function() {
                 exampleSiftObj.rules.only  = {
                         'foo': ['apple', 'orange'],
                         'bar': ['pear', 'banana']
@@ -1563,14 +1861,16 @@
                 expect(inputObj).toBe(false);
             });
 
-            it('Sift.rules.required: Rules.required property created says if bar is not present, Sift throws error', function() {
+            it('Sift.rules.required: Rules.required property created says if bar is not present, ' +
+            'Sift throws error', function() {
                 exampleSiftObj.rules.required = ['bar'] ;
                 exampleSiftObj.args  =  ['foo', 'apple'];
                 inputObj  = testSiftCall(exampleSiftObj)();
                 expect(inputObj).toBe(false);
             });
 
-            it('Sift.rules.exclusive: More than one parameter from rules.exclusive group present in args and Sift will throw error', function() {
+            it('Sift.rules.exclusive: More than one parameter from rules.exclusive group present in args ' +
+            'and Sift will throw error', function() {
                 exampleSiftObj.rules.exclusive  = [
                     ['foo', 'bar']
                 ];
@@ -1584,7 +1884,8 @@
                 expect(inputObj).toBe(false);
             });
 
-            it('Sift.rules.custom: Parameters will be evaluated against function passed to sub key representing parameter', function() {
+            it('Sift.rules.custom: Parameters will be evaluated against function passed to sub key ' +
+            'representing parameter', function() {
                 exampleSiftObj.rules.custom  =
                 {
                    'foo':function(value){
@@ -1596,7 +1897,8 @@
                 expect(inputObj).toBe(false);
             });
 
-            it('Sift.rules.type: Sift will throw error if args contains parameters with corresponding types that conflict with Rules.type property', function() {
+            it('Sift.rules.type: Sift will throw error if args contains parameters with corresponding types' +
+            ' that conflict with Rules.type property', function() {
 
                 exampleSiftObj.rules.type  = {
                    'foo':['String'],
@@ -1612,14 +1914,16 @@
                 expect(inputObj).toBe(false);
             });
 
-            it('Sift.rules.atleastOne: Sift error is thrown if Rules.atleastOne property is true and no argument from the contract array is present', function() {
+            it('Sift.rules.atleastOne: Sift error is thrown if Rules.atleastOne property is true ' +
+            'and no argument from the contract array is present', function() {
                 exampleSiftObj.rules.atLeastOne  =  true;
                 exampleSiftObj.args  =  [];
                 inputObj  = testSiftCall(exampleSiftObj)();
                 expect(inputObj).toBe(false);
             });
 
-            it('Sift.rules.oneForAll: Sift throws error if 1 or more argument in Rules.oneForAll property group is specified and not in Sift.args', function() {
+            it('Sift.rules.oneForAll: Sift throws error if 1 or more argument in Rules.oneForAll property group is' +
+            ' specified and not in Sift.args', function() {
                 exampleSiftObj.rules.oneForAll  = ['foo', 'bar'];
                 exampleSiftObj.args  = ['foo', 'apple'];
                 inputObj  = testSiftCall(exampleSiftObj)();
@@ -1632,7 +1936,8 @@
                 expect(inputObj).toBe(false);
             });
 
-            it('Sift.rules.requires: Rules.requires property created says if foo is present and bar is not present, Sift throws error', function() {
+            it('Sift.rules.requires: Rules.requires property created says if foo is present and bar is not present, ' +
+            'Sift throws error', function() {
 
                 exampleSiftObj.rules.requires  =  {
                     'foo': ['bar']
@@ -1669,7 +1974,8 @@
             expect(fn instanceof Function).toBe(true);
 
             expect(function(){ fn(); } ).toThrow(
-                new Error('Sift.rules.required violation: 1 or more required argument(s) missing. Required argument(s): [name,email]')
+                new Error('Sift.rules.required violation: 1 or more required argument(s) missing. ' +
+                'Required argument(s): [name,email]')
             );
 
             expect(function(){ Sift(fnConfig, 'You didn\'t have to cut me off'); } ).toThrow(
@@ -1707,7 +2013,10 @@
             );
 
             expect(function(){ fn(); } ).toThrow(
-                new Error('Sift.rules.required violation: 1 or more required argument(s) missing. Required argument(s): [name,email]')
+                new Error(
+                    'Sift.rules.required violation: 1 or more required argument(s) missing. ' +
+                    'Required argument(s): [name,email]'
+                )
             );
 
             expect(function(){
@@ -1720,8 +2029,8 @@
 
     describe('Testing Siftified Collections', function() {
 
-        it('Given a config \'fnConfig\' and a collection \'col\' Sift will throw an error if any object in collection ' +
-            'fails to be validation when evaluated against \'fnConfig\'', function() {
+        it('Given a config \'fnConfig\' and a collection \'col\' Sift will throw an error if any object in ' +
+            'collection fails to be validation when evaluated against \'fnConfig\'', function() {
 
             var col = [
                 {'name':'Russell', 'email':'russell@gmail.com'},
@@ -1746,13 +2055,14 @@
                     '\nFailing Collection Item:\n'+
                     '{\"name\":\"Shawn\"}'+
                     '\nCollection Failure!!\n'+
-                    'Sift.rules.required violation: 1 or more required argument(s) missing. Required argument(s): [name,email]'
+                    'Sift.rules.required violation: 1 or more required argument(s) missing. ' +
+                    'Required argument(s): [name,email]'
                 )
             );
         });
 
-        it('Given a config \'fnConfig\' and a collection \'col\' Sift will throw an error if any object in collection ' +
-            'fails to be validation when evaluated against \'fnConfig\'', function() {
+        it('Given a config \'fnConfig\' and a collection \'col\' Sift will throw an error if any object in ' +
+            'collection fails to be validation when evaluated against \'fnConfig\'', function() {
 
             var col = [
                 {'name':'Russell', 'email':'russell@gmail.com'},
@@ -1805,56 +2115,3 @@
             expect(assertAllObjectsInOriginalCollectionAreReturnedBySift()).toBe(true);
         });
     });
-//        var fnConfig = {
-//            contract: ['name', 'email'],
-//            failOnError: true,
-//            rules: {
-//                required: ['name', 'email']
-//            }
-//        };
-
-//         var inputObj = Sift({
-//         contract:['url', 'named', 'butler', 'reconcile', 'shell', 'config', 'year'],
-//         args: this.args,
-//         failOnError: true,
-//         pairedArgs: true,
-//         rules:{
-//                 exclusive: [
-//                     ['url', 'named']
-//                 ],
-//                 collections: {
-//                     'users': fnConfig
-//                 },
-//                 requires: {
-//                     'reconcile': ['butler']
-//                 },
-//                 only: {
-//                     'shell': ['Terminal', 'iTerm'],
-//                     'config: ['yes', 'no']
-//                 },
-//                 defaults: {
-//                     'shell': 'Terminal'
-//                 },
-//                 oneForAll: ['module', 'butler'],
-//                 atLeastOne: true,
-//                 required: ['name'],
-//                 map: {
-//                     'config': {
-//                         'yes': true,
-//                         'no': false
-//                     }
-//                 },
-//                type:{
-//                    'url':['String'],
-//                    'year':['number'],
-//                    'butler':['String', 'regex']
-//                },
-//                custom:{
-//                    'shell':function(value){
-//                       return value.toLowerCase() == 'terminal' 
-//                          || value.toLowerCase() == 'iterm' 
-//                          || value.toLowerCase() == 'gitbash';
-//                     }
-//                }        
-//             }
-//         });  
