@@ -17,7 +17,10 @@
     "parsing"
   ],
   "author": "Russell John-Baptiste <russell.john.baptiste@gmail.com> (https://github.com/Luckvery)",
-  "license": "MIT",
+  "licenses": {
+    "type": "MIT",
+    "url": "https://github.com/Luckvery/sift-js/blob/master/LICENSE-MIT"
+  },
   "bugs": {
     "url": "https://github.com/Luckvery/sift-js/issues"
   },
