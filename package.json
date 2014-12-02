@@ -25,7 +25,7 @@
     "url": "https://github.com/Luckvery/sift-js/issues"
   },
   "homepage": "https://github.com/Luckvery/sift-js",
-  "devDependencies": {
+  "dependencies": {
     "jasmine-node": "^1.14.5",
     "lodash": "^2.4.1"
   }
