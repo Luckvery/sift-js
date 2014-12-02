@@ -1,6 +1,6 @@
 {
   "name": "siftjs",
-  "version": "1.0.7",
+  "version": "1.0.9",
   "description": "Run your parameters through the Sift for validation;defining rules upfront, simplifying your js implementations",
   "main": "Sift.js",
   "scripts": {
