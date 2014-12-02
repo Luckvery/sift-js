@@ -1,5 +1,5 @@
 {
-  "name": "sift",
+  "name": "siftjs",
   "version": "1.0.0",
   "description": "Run your parameters through the Sift for validation;defining rules upfront, simplifying your js implementations",
   "main": "Sift.js",
