@@ -1,6 +1,5 @@
 
-[<img src="https://raw.githubusercontent.com/Luckvery/sift-js/master/img/siftbro.jpg">]
-(https://raw.githubusercontent.com/Luckvery/sift-js/master/img/siftbro.jpg)
+<img src="https://raw.githubusercontent.com/Luckvery/sift-js/master/img/siftbro.jpg">
 
 
 # Sift
