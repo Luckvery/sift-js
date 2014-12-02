@@ -1,0 +1,129 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'node', '/usr/local/bin/npm', 'publish' ]
+2 info using npm@1.4.9
+3 info using node@v0.10.28
+4 verbose publish [ '.' ]
+5 verbose cache add [ '.', null ]
+6 verbose cache add name=undefined spec="." args=[".",null]
+7 verbose parsed url { protocol: null,
+7 verbose parsed url   slashes: null,
+7 verbose parsed url   auth: null,
+7 verbose parsed url   host: null,
+7 verbose parsed url   port: null,
+7 verbose parsed url   hostname: null,
+7 verbose parsed url   hash: null,
+7 verbose parsed url   search: null,
+7 verbose parsed url   query: null,
+7 verbose parsed url   pathname: '.',
+7 verbose parsed url   path: '.',
+7 verbose parsed url   href: '.' }
+8 silly lockFile 3a52ce78- .
+9 verbose lock . /Users/russell.johnbaptiste/.npm/3a52ce78-.lock
+10 verbose tar pack [ '/Users/russell.johnbaptiste/tmp/npm-14914-rBl6unLJ/1417541454123-0.40215948363766074/tmp.tgz',
+10 verbose tar pack   '.' ]
+11 verbose tarball /Users/russell.johnbaptiste/tmp/npm-14914-rBl6unLJ/1417541454123-0.40215948363766074/tmp.tgz
+12 verbose folder .
+13 info prepublish siftjs@1.0.1
+14 silly lockFile 1f1177db-tar tar://.
+15 verbose lock tar://. /Users/russell.johnbaptiste/.npm/1f1177db-tar.lock
+16 silly lockFile b6b752ff-4123-0-40215948363766074-tmp-tgz tar:///Users/russell.johnbaptiste/tmp/npm-14914-rBl6unLJ/1417541454123-0.40215948363766074/tmp.tgz
+17 verbose lock tar:///Users/russell.johnbaptiste/tmp/npm-14914-rBl6unLJ/1417541454123-0.40215948363766074/tmp.tgz /Users/russell.johnbaptiste/.npm/b6b752ff-4123-0-40215948363766074-tmp-tgz.lock
+18 silly lockFile 1f1177db-tar tar://.
+19 silly lockFile 1f1177db-tar tar://.
+20 silly lockFile b6b752ff-4123-0-40215948363766074-tmp-tgz tar:///Users/russell.johnbaptiste/tmp/npm-14914-rBl6unLJ/1417541454123-0.40215948363766074/tmp.tgz
+21 silly lockFile b6b752ff-4123-0-40215948363766074-tmp-tgz tar:///Users/russell.johnbaptiste/tmp/npm-14914-rBl6unLJ/1417541454123-0.40215948363766074/tmp.tgz
+22 verbose tar unpack /Users/russell.johnbaptiste/tmp/npm-14914-rBl6unLJ/1417541454123-0.40215948363766074/tmp.tgz
+23 silly lockFile 17fff914-aptiste-npm-siftjs-1-0-1-package tar:///Users/russell.johnbaptiste/.npm/siftjs/1.0.1/package
+24 verbose lock tar:///Users/russell.johnbaptiste/.npm/siftjs/1.0.1/package /Users/russell.johnbaptiste/.npm/17fff914-aptiste-npm-siftjs-1-0-1-package.lock
+25 silly lockFile b6b752ff-4123-0-40215948363766074-tmp-tgz tar:///Users/russell.johnbaptiste/tmp/npm-14914-rBl6unLJ/1417541454123-0.40215948363766074/tmp.tgz
+26 verbose lock tar:///Users/russell.johnbaptiste/tmp/npm-14914-rBl6unLJ/1417541454123-0.40215948363766074/tmp.tgz /Users/russell.johnbaptiste/.npm/b6b752ff-4123-0-40215948363766074-tmp-tgz.lock
+27 silly gunzTarPerm modes [ '755', '644' ]
+28 silly gunzTarPerm extractEntry package.json
+29 silly gunzTarPerm extractEntry .npmignore
+30 silly gunzTarPerm modified mode [ '.npmignore', 436, 420 ]
+31 silly gunzTarPerm extractEntry README.md
+32 silly gunzTarPerm extractEntry Sift.js
+33 silly gunzTarPerm extractEntry .idea/.name
+34 silly gunzTarPerm extractEntry .idea/encodings.xml
+35 silly gunzTarPerm extractEntry .idea/jsLibraryMappings.xml
+36 silly gunzTarPerm extractEntry .idea/libraries/sift_node_modules.xml
+37 silly gunzTarPerm extractEntry .idea/misc.xml
+38 silly gunzTarPerm extractEntry .idea/modules.xml
+39 silly gunzTarPerm extractEntry .idea/scopes/scope_settings.xml
+40 silly gunzTarPerm extractEntry .idea/sift.iml
+41 silly gunzTarPerm extractEntry .idea/vcs.xml
+42 silly gunzTarPerm extractEntry .idea/workspace.xml
+43 silly gunzTarPerm extractEntry LICENSE-MIT
+44 silly gunzTarPerm extractEntry img/siftbro.jpg
+45 silly gunzTarPerm extractEntry spec/SiftSpec.js
+46 silly lockFile 17fff914-aptiste-npm-siftjs-1-0-1-package tar:///Users/russell.johnbaptiste/.npm/siftjs/1.0.1/package
+47 silly lockFile 17fff914-aptiste-npm-siftjs-1-0-1-package tar:///Users/russell.johnbaptiste/.npm/siftjs/1.0.1/package
+48 silly lockFile b6b752ff-4123-0-40215948363766074-tmp-tgz tar:///Users/russell.johnbaptiste/tmp/npm-14914-rBl6unLJ/1417541454123-0.40215948363766074/tmp.tgz
+49 silly lockFile b6b752ff-4123-0-40215948363766074-tmp-tgz tar:///Users/russell.johnbaptiste/tmp/npm-14914-rBl6unLJ/1417541454123-0.40215948363766074/tmp.tgz
+50 silly lockFile 3a52ce78- .
+51 silly lockFile 3a52ce78- .
+52 silly publish { name: 'siftjs',
+52 silly publish   version: '1.0.1',
+52 silly publish   description: 'Run your parameters through the Sift for validation;defining rules upfront, simplifying your js implementations',
+52 silly publish   main: 'Sift.js',
+52 silly publish   scripts: { test: 'jasmine-node spec/' },
+52 silly publish   repository: { type: 'git', url: 'https://github.com/Luckvery/sift-js.git' },
+52 silly publish   keywords: [ 'validation', 'argument-parser', 'parser', 'parsing' ],
+52 silly publish   author:
+52 silly publish    { name: 'Russell John-Baptiste',
+52 silly publish      email: 'russell.john.baptiste@gmail.com',
+52 silly publish      url: 'https://github.com/Luckvery' },
+52 silly publish   licenses:
+52 silly publish    { type: 'MIT',
+52 silly publish      url: 'https://github.com/Luckvery/sift-js/blob/master/LICENSE-MIT' },
+52 silly publish   bugs: { url: 'https://github.com/Luckvery/sift-js/issues' },
+52 silly publish   homepage: 'https://github.com/Luckvery/sift-js',
+52 silly publish   devDependencies: { 'jasmine-node': '^1.14.5', lodash: '^2.4.1' },
+52 silly publish   readme: '\n![](https://github.com/Luckvery/sift-js/blob/master/img/siftbro.jpg)\n\n\n# Sift\n`Sift(config, [ function | collection of objects ])`\n\n*Validations and typing on steriods*\n> Run your parameters through the Sift to define rules upfront, simplifying your js implementation.\n\nI use this a lot with grunt. I plan on using it in a few other js projects too.  I\'d love to hear any feed back on improvements and ways you\'ve used it!\n\n\n### The Sift Config Object\n\n\n#### <u>contract</u>\n\nType: `array`  \n\nList of valid parameter names.\n\n\n#### <u>args</u>\n\nType: `argument object`, `object literal` or `array`  \nDefault: `true`\n\nList/object of actual parameters.\n\n\n#### <u>pairedArgs</u>\n\nType: `Boolean`  \nDefault: `false`\n\nWhen false, Sift uses your contract property to map variable names to values. Order matters, so given a contract \n["foo", "bar"] the first  value of an Arguments obj or array will map to "foo" and the second value will map to "bar".\nWhen pairedArgs is set to true Sift will expect Argument objects and arrays passed to Sift config object property "args"\nto be in the form [paramName1, paramName1value, paramName2, paramName2value]. \n\n**Motivation:**\nI did this because I was running into a lot of collisions working with passing values on the command line to grunt. To get\naround it I found myself needing to parse something like `grunt task:paramName1:paramName1value:paramName1:paramName2value`\nfrom the command line. In my grunt task this.args would look like [paramName1, paramName1value, paramName2, paramName2value]\n\n#### <u>failOnError</u>\n\nType: `Boolean`\nDefault: `false`\n\nSet to true to fail task if Sift encounters an error. If set to false, any errors will cause Sift to return false.\n\n#### <u>rules</u>\n\nType: `Object`\n\nDeclaratively perform validation on parameters in Sift\'s contract\n\n|    Name             | Description                                              |\n|:-------------------:|:--------------------------------------------------------:|\n|atLeastOne|At least one argument in contract must have a value|\n|collections|Map parameters that are a collections to sift configs to evaluate them|\n|custom|Define custom validations with a callback function|\n|defaults|Set default values for arguments in this group that aren\'t present|\n|exclusive|Each argument in this group is mutually exclusive|\n|map|transform user input into some other value you may find more useful|\n|only|List the only allowable values for an argument|\n|oneForAll|If one argument exists, then all arguments in this group must be present|\n|required|An array of required arguments|\n|requires|Define dependants of an argument|\n|type|lodash based type checking|\n\n### Optional Second Argument\n\n#### <u>Function to be siftified</u>\n Type: `Function`\n \n When present, Sift will return the function so you might assign it to a variable (for example). After which when this\n function is called, its arguments will be evaluated by Sift. In practice arguments should be key/value object where keys\n are parameter names and values are values for respective parameter names. However, although less useful, it is also possible\n to pass an argument object or an array of alternating key, value pairs in the form, `["foo", "hello", "bar", "world"]`.\n\n#### <u>Collection of objects to be validated</u>\n Type: `Array`\n \n When present Sift will validate each object in the collection, returning the original collection if all objects are good.\n\n\n### Example usage\n\n#### Siftify that function\n```\n    var cool = function (name, email){\n        return name + " can\'t be reached at " + email;\n    };\n\n    var fn = Sift({\n        contract: ["name", "email"],\n        failOnError: true,\n        rules: {\n            required: ["name", "email"]\n        }\n    }, cool);\n\n    //logs "Russell can\'t be reached at notreallyrussell@gmail.com"\n    console.log(fn("Russell", "notreallyrussell@gmail.com"));\n\n```\n#### Use Sift to validate a collection\n```\n      var col = [\n            {"name":"Russell", "email":"russell@gmail.com"},\n            {"name":"David", "email":"david@gmail.com"},\n            {"name":"Paul", "email":"paul@gmail.com"},\n            {"name":"Shawn", "email":"shawn@gmail.com"},\n            {"name":"Fred", "email":"fred@gmail.com"},\n            {"name":"Dennis", "email":"dennis@gmail.com"},\n            {"name":"Andrew", "email":"andrew@gmail.com"}\n        ];\n\n        var colConfig = {\n          contract: ["name", "email"],\n          failOnError: true,\n          rules: {\n              required: ["name", "email"]\n          }\n        };\n\n        var assetAllObjectsInOriginalCollectionAreReturnedBySift = function () {\n            return _.every(Sift(colConfig, col), function (obj) {\n                return !_.isEmpty(_.where(col, obj));\n            }.bind(this));\n        };\n\n        // true!!\n        console.log(assetAllObjectsInOriginalCollectionAreReturnedBySift());\n\n```\n#### Use Sift to validate a nested collection\nConfigs for nested collections work as usual. The only thing you have to remember is that the args for nested config\n(in the Rules.collections object) will be ignored. Lets clarify this idea with the following code fragment from our\n[tests](https://github.com/Luckvery/sift-js/blob/master/spec/SiftSpec.js#L930 "Tests!!! Yay!!!" ):\n\n```\n        var captainCollection = [\n            {\'captain\': \'captain1\', \'email\': \'captain1@gmail.com\', wars: 3},\n            {\'captain\': \'captain2\', \'email\': \'captain2@gmail.com\', wars: 3},\n            {\'captain\': \'captain3\', \'email\': \'captain3@gmail.com\'},\n            {\'captain\': \'captain4\', \'email\': \'captain4@gmail.com\', wars: 4},\n            {\'captain\': \'captain5\', \'email\': \'captain5@gmail.com\', wars: 6}\n        ];\n\n        var captainCollectionConfig = {\n            // process current level in hierarchy\n            contract: [\'captain\', \'wars\', \'email\'],\n            failOnError: true,\n            pairedArgs: true,\n            rules: {\n                required: [\'captain\', \'email\', \'wars\'],\n                type:{\n                    \'wars\':[\'number\']\n                }\n            }\n        };\n\n        regionalCommanders = [\n            {\n                \'general\': \'Russell\',\n                ships: 6,\n                region: \'France\',\n                \'email\': \'russell@gmail.com\',\n                captains: captainCollection\n            },\n            {\n                \'general\': \'David\',\n                ships: 3,\n                region: \'England\',\n                \'email\': \'david@gmail.com\',\n                captains: captainCollection\n            },\n            {\n                \'general\': \'Paul\',\n                ships: 1,\n                region: \'Spain\',\n                \'email\': \'paul@gmail.com\',\n                captains: captainCollection\n            },\n            {\n                \'general\': \'Shawn\',\n                ships: 3,\n                region: \'Netherlands\',\n                \'email\': \'shawn@gmail.com\',\n                captains: captainCollection\n            },\n            {\n                \'general\': \'Ryan\',\n                ships: 5,\n                region: \'Belgium\',\n                \'email\': \'ryan@gmail.com\',\n                captains: captainCollection\n            },\n            {\n                \'general\': \'Anthony\',\n                ships: 9,\n                region: \'Ireland\',\n                \'email\': \'anthony@gmail.com\',\n                captains: captainCollection\n            },\n            {\n                \'general\': \'Fred\',\n                ships: 7,\n                region: \'Germany\',\n                \'email\': \'fred@gmail.com\',\n                captains: captainCollection\n            },\n            {\n                \'general\': \'Dennis\',\n                ships: 1,\n                region: \'Italy\',\n                \'email\': \'dennis@gmail.com\',\n                captains: captainCollection\n            },\n            {\n                \'general\': \'Andrew\',\n                ships: 7,\n                region: \'Switzerland\',\n                \'email\': \'andrew@gmail.com\',\n                captains: captainCollection\n            }\n        ];\n\n        regionalCommandersConfig = {\n            // process current level in hierarchy\n            contract: [\'general\', \'ships\', \'region\', \'email\', \'captains\'],\n            failOnError: true,\n            pairedArgs: true,\n            rules: {\n                required: [\'captains\'],\n                // process next level down in hierarchy\n                collections: {\n                    \'captains\': captainCollectionConfig\n                },\n                type:{\n                    \'ships\':[\'number\']\n                }\n            }\n        };\n\n        var mainConfig = {\n            contract: [\'planet\', \'attempt\', \'generals\'],\n            args: [\n                \'planet\',\n                \'earth\',\n                \'attempt\',\n                \'3\',\n                \'generals\',\n                regionalCommanders\n            ],\n            pairedArgs: true,\n            rules: {\n                collections: {\n                    \'generals\': regionalCommandersConfig\n                }\n            }\n        };\n\n        expect(function(){\n            Sift(mainConfig);\n        }).toThrow(\n            new Error(\n                \'\\nFailing Collection Item:\\n\'+\n                \'{"captain":"captain3","email":"captain3@gmail.com"}\'+\n                \'\\nCollection Failure!!\\n\'+\n                \'Sift.rules.required violation: \' +\n                \'1 or more required argument(s) missing. \' +\n                \'Required argument(s): [captain,email,wars]\'\n            )\n        );\n```\n#### Contrived grunt worker task\n```\nmodule.exports = function(grunt) {\n    grunt.registerTask(\n    \'worker\',\n    \'worker task to update files on S3 or DynamoDB\',\n    function() {\n\n        var inputObj = Sift(["update"],\n            this.args, {\n                only: {\n                    "update": ["s3Assets", "dynamoDBAssets"]\n                },\n                defaults: {\n                    "update": "s3Assets"\n                },\n                map:{\n                    "update"{\n                        "s3Assets": [\n                                      \'shell:buildS3AssetsLocally\', \n                                      \'shell:pushToS3\'\n                        ],\n                        "dynamoDBAssets": [\n                                      \'shell:buildDynamoAssetsLocally\', \n                                      \'shell:pushToS3\', \n                                      \'shell:cleanTempFiles\'\n                        ]\n                    }\n                }\n            }, true);\n\n        turnOffTaskLogHeader([\n            \'shell\'\n        ]);\n\n        grunt.task.run(inputObj["update"]);\n    });\n};\n\n```\n#### Contrived total usage\n```\nfooBar(){\n     var colConfig = {\n         contract: ["name", "email"],\n         failOnError: true,\n         rules: {\n             required: ["name", "email"]\n         }\n     };\n\n     var col = [\n        {"name":"Russell", "email":"russell@gmail.com"},\n        {"name":"David", "email":"david@gmail.com"},\n        {"name":"Paul", "email":"paul@gmail.com"},\n        {"name":"Fred", "email":"fred@gmail.com"},\n        {"name":"Dennis", "email":"dennis@gmail.com"},\n        {"name":"Andrew", "email":"andrew@gmail.com"}\n     ];\n\n     var inputObj = Sift({\n        contract:[\n          "url", "named", "clientId", "reconcile", "shell", "config", "year"\n        ],\n        args: arguments,\n        failOnError: true,\n        pairedArgs: true,\n        rules:{\n                exclusive: [\n                    ["url", "named"]\n                ],\n                collection: {\n                    "users": colConfig\n                },\n                requires: {\n                    "reconcile": ["clientId"]\n                },\n                only: {\n                    "shell": ["Terminal", "iTerm"],\n                    "config": ["yes", "no"]\n                },\n                defaults: {\n                    "shell": "Terminal"\n                },\n                oneForAll: ["module", "clientId"],\n                atleastOne: true,\n                required: ["name"],\n                map: {\n                    "config": {\n                        "yes": true,\n                        "no": false\n                    }\n                },\n               type:{\n                   "url":["String"],\n                   "year":["number"],\n                   "clientId":["String", "regex"]\n               },\n               custom:{\n                   "shell":function(value){\n                      return value.toLowerCase() == "terminal" \n                         || value.toLowerCase() == "iterm" \n                         || value.toLowerCase() == "gitbash";\n                    }\n               }        \n            }\n        });\n}\n```\n\n#### See Tests for more examples!!\n',
+52 silly publish   readmeFilename: 'README.md',
+52 silly publish   _id: 'siftjs@1.0.1',
+52 silly publish   _shasum: 'b7c0ae84a65a7e4549bc75e531b02a4126a1f5ce',
+52 silly publish   _from: '.' }
+53 verbose url raw siftjs
+54 verbose url resolving [ 'https://registry.npmjs.org/', './siftjs' ]
+55 verbose url resolved https://registry.npmjs.org/siftjs
+56 info trying registry request attempt 1 at 12:30:54
+57 http PUT https://registry.npmjs.org/siftjs
+58 http 403 https://registry.npmjs.org/siftjs
+59 verbose headers { date: 'Tue, 02 Dec 2014 17:30:55 GMT',
+59 verbose headers   server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+59 verbose headers   'content-type': 'application/json',
+59 verbose headers   'cache-control': 'max-age=60',
+59 verbose headers   'content-length': '230',
+59 verbose headers   'accept-ranges': 'bytes',
+59 verbose headers   via: '1.1 varnish',
+59 verbose headers   'x-served-by': 'cache-atl6223-ATL',
+59 verbose headers   'x-cache': 'MISS',
+59 verbose headers   'x-cache-hits': '0',
+59 verbose headers   'x-timer': 'S1417541454.752699,VS0,VE389',
+59 verbose headers   'keep-alive': 'timeout=10, max=50',
+59 verbose headers   connection: 'Keep-Alive' }
+60 error publish Failed PUT 403
+61 error Error: forbidden Attempting to modify version 1.0.1,
+61 error which was previously published on 2014-12-02T16:59:40.927Z.
+61 error This is forbidden, to maintain package integrity.
+61 error Please update the version number and try again.: siftjs
+61 error     at RegClient.<anonymous> (/usr/local/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:273:14)
+61 error     at Request._callback (/usr/local/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:211:65)
+61 error     at Request.self.callback (/usr/local/lib/node_modules/npm/node_modules/request/request.js:123:22)
+61 error     at Request.EventEmitter.emit (events.js:98:17)
+61 error     at Request.<anonymous> (/usr/local/lib/node_modules/npm/node_modules/request/request.js:893:14)
+61 error     at Request.EventEmitter.emit (events.js:117:20)
+61 error     at IncomingMessage.<anonymous> (/usr/local/lib/node_modules/npm/node_modules/request/request.js:844:12)
+61 error     at IncomingMessage.EventEmitter.emit (events.js:117:20)
+61 error     at _stream_readable.js:919:16
+61 error     at process._tickCallback (node.js:419:13)
+62 error If you need help, you may report this *entire* log,
+62 error including the npm and node versions, at:
+62 error     <http://github.com/npm/npm/issues>
+63 error System Darwin 13.4.0
+64 error command "node" "/usr/local/bin/npm" "publish"
+65 error cwd /Users/russell.johnbaptiste/Projects/sift
+66 error node -v v0.10.28
+67 error npm -v 1.4.9
+68 verbose exit [ 1, true ]
