@@ -325,6 +325,15 @@ module.exports = function(grunt) {
 #### Contrived total usage
 ```
 fooBar(){
+//    Assuming arguments contains:
+//    var users = [
+//        {"name":"Russell", "email":"russell@gmail.com"},
+//        {"name":"David", "email":"david@gmail.com"},
+//        {"name":"Paul", "email":"paul@gmail.com"},
+//        {"name":"Fred", "email":"fred@gmail.com"},
+//        {"name":"Dennis", "email":"dennis@gmail.com"},
+//        {"name":"Andrew", "email":"andrew@gmail.com"}
+//   ];
      var colConfig = {
          contract: ["name", "email"],
          failOnError: true,
@@ -333,18 +342,9 @@ fooBar(){
          }
      };
 
-     var col = [
-        {"name":"Russell", "email":"russell@gmail.com"},
-        {"name":"David", "email":"david@gmail.com"},
-        {"name":"Paul", "email":"paul@gmail.com"},
-        {"name":"Fred", "email":"fred@gmail.com"},
-        {"name":"Dennis", "email":"dennis@gmail.com"},
-        {"name":"Andrew", "email":"andrew@gmail.com"}
-     ];
-
      var inputObj = Sift({
         contract:[
-          "url", "named", "clientId", "reconcile", "shell", "config", "year"
+          "url", "named", "clientId", "reconcile", "shell", "config", "users"
         ],
         args: arguments,
         failOnError: true,
@@ -377,7 +377,6 @@ fooBar(){
                 },
                type:{
                    "url":["String"],
-                   "year":["number"],
                    "clientId":["String", "regex"]
                },
                custom:{
