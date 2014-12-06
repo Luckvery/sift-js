@@ -569,6 +569,3 @@ var Sift = function(config) {
     }
 
 }));
-
-
-        
